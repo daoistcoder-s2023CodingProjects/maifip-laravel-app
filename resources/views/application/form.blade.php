@@ -374,61 +374,38 @@
         <div class="form-step position-relative" id="step-4" style="display:none;">
             <div class="application-form-card mb-4">
                 <h5 class="mb-3" style="color:#186737;font-weight:500;">Medical Data</h5>
-                <!-- Medical history, allergies, etc. -->
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label">Do you have any allergies?</label>
-                        <select class="form-select" name="allergies">
-                            <option value="">Select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
+                        <label class="form-label">Admitting Diagnosis</label>
+                        <input type="text" class="form-control" name="admitting_diagnosis" placeholder="Add details">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">If yes, please specify</label>
-                        <input type="text" class="form-control" name="allergies_details">
-                    </div>
-                </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Do you have any chronic illnesses?</label>
-                        <select class="form-select" name="chronic_illnesses">
-                            <option value="">Select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
+                        <label class="form-label">Final Diagnosis</label>
+                        <input type="text" class="form-control" name="final_diagnosis" placeholder="Add details">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">If yes, please specify</label>
-                        <input type="text" class="form-control" name="chronic_illnesses_details">
-                    </div>
-                </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Are you currently taking any medications?</label>
-                        <select class="form-select" name="current_medications">
-                            <option value="">Select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
+                        <label class="form-label">Duration of Problems / Symptoms</label>
+                        <input type="text" class="form-control" name="duration_of_problems" placeholder="Add details">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">If yes, please specify</label>
-                        <input type="text" class="form-control" name="current_medications_details">
-                    </div>
-                </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Have you had any surgeries in the past?</label>
-                        <select class="form-select" name="past_surgeries">
-                            <option value="">Select</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
+                        <label class="form-label">Previous Treatment / Duration</label>
+                        <input type="text" class="form-control" name="previous_treatment" placeholder="Add details">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">If yes, please specify</label>
-                        <input type="text" class="form-control" name="past_surgeries_details">
+                        <label class="form-label">Present Treatment Plan</label>
+                        <input type="text" class="form-control" name="present_treatment_plan" placeholder="Add details">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Health Accessibility Problem</label>
+                        <input type="text" class="form-control" name="health_accessibility_problem" placeholder="Add details">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Assessment / Findings</label>
+                        <input type="text" class="form-control" name="assessment_findings" placeholder="Add details">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Recommended Interventions</label>
+                        <input type="text" class="form-control" name="recommended_interventions" placeholder="Add details">
                     </div>
                 </div>
             </div>
