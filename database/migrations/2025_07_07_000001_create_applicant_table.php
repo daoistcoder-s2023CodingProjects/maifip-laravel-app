@@ -51,10 +51,7 @@ return new class extends Migration
             $table->string('philhealth_contributor_status')->nullable();
 
             // --- Family Composition Section ---
-            $table->string('family_member_name')->nullable();
-            $table->date('family_member_birthdate')->nullable();
-            $table->integer('family_member_age')->nullable();
-            $table->string('relationship_to_patient')->nullable();
+            $table->json('family_composition')->nullable();
 
             // === FORM 3: MSWD Classification ===
             $table->string('main_classification')->nullable();

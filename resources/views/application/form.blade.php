@@ -1,19 +1,22 @@
 <div class="application-form">
     <!-- Stepper Navigation -->
     <div class="stepper mb-4">
-        <div class="step active"><span>1</span><div>Initial</div></div>
-        <div class="step"><span>2</span><div>Patient</div></div>
-        <div class="step"><span>3</span><div>MSWD</div></div>
-        <div class="step"><span>4</span><div>Medical Data</div></div>
-        <div class="step"><span>5</span><div>Summary</div></div>
+        <div class="step active" data-step="1"><span>1</span><div>Initial</div></div>
+        <div class="step" data-step="2"><span>2</span><div>Patient</div></div>
+        <div class="step" data-step="3"><span>3</span><div>MSWD</div></div>
+        <div class="step" data-step="4"><span>4</span><div>Medical Data</div></div>
+        <div class="step" data-step="5"><span>5</span><div>Summary</div></div>
     </div>
     <!-- Multi-step Form -->
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-    <form id="maifip-multistep-form" method="POST" action="{{ route('application.form1.submit') }}">
+    <form id="maifip-multistep-form" method="POST" action="{{ route('application.submit') }}">
         @csrf
-        <div class="form-step form-step-active" id="step-1">
+        <div id="form-overlay" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#eaf8f2 0%,#f8f9fa 100%);z-index:10;align-items:center;justify-content:center;">
+            <div class="spinner-border text-success" style="width:3rem;height:3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <!-- Step 1 -->
+        <div class="form-step form-step-active position-relative" id="step-1">
             <h5 class="mb-3" style="color:#186737;font-weight:700;">Initial Information</h5>
             <div class="row g-3 mb-3">
                 <div class="col-md-4">
@@ -44,11 +47,21 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Start of Interview</label>
-                    <input type="text" class="form-control" name="interview_start_time" placeholder="Add time AM/PM" required>
+                    <select class="form-select" name="interview_start_time" required>
+                        <option value="">Select time</option>
+                        @foreach($timeSelections as $time)
+                            <option value="{{ $time['value'] }}">{{ $time['label'] }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">End of Interview</label>
-                    <input type="text" class="form-control" name="interview_end_time" placeholder="Add time AM/PM" required>
+                    <select class="form-select" name="interview_end_time" required>
+                        <option value="">Select time</option>
+                        @foreach($timeSelections as $time)
+                            <option value="{{ $time['value'] }}">{{ $time['label'] }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <h5 class="mb-3" style="color:#186737;font-weight:700;">Referral Information</h5>
@@ -76,11 +89,208 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-outline-success btn-lg" disabled>Back</button>
-                <button type="submit" class="btn btn-success btn-lg" id="nextBtn">Next</button>
+                <button type="button" class="btn btn-outline-success btn-lg" id="backBtn1" disabled>Back</button>
+                <button type="button" class="btn btn-success btn-lg nextBtn" data-next="2">Next</button>
             </div>
         </div>
-        <!-- Steps 2-4 and Summary will be added here in the next steps -->
+        <!-- Step 2 (Patient Information) -->
+        <div class="form-step position-relative" id="step-2" style="display:none;">
+            <div class="container-fluid px-0">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="mb-3" style="color:#186737;font-weight:700;">Patient Information</h5>
+                        <div class="row g-3 mb-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Family Name</label>
+                                <input type="text" class="form-control" name="patient_family_name" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" name="patient_first_name" required>
+                            </div>
+                            <div class="col-md-4 d-flex gap-2">
+                                <div style="flex:2">
+                                    <label class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" name="patient_middle_name">
+                                </div>
+                                <div style="flex:1">
+                                    <label class="form-label">Extension</label>
+                                    <input type="text" class="form-control" name="patient_extension" placeholder="Sr, Jr, III...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" name="patient_birthdate" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Age</label>
+                                <input type="number" class="form-control" name="patient_age" min="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" name="patient_gender" required>
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Contact Number</label>
+                                <input type="text" class="form-control" name="patient_contact_number">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Place of Birth</label>
+                                <input type="text" class="form-control" name="place_of_birth">
+                            </div>
+                            <div class="col-md-4 d-flex gap-2">
+                                <div style="flex:1">
+                                    <label class="form-label">Nationality</label>
+                                    <input type="text" class="form-control" name="nationality">
+                                </div>
+                                <div style="flex:1">
+                                    <label class="form-label">Religion</label>
+                                    <input type="text" class="form-control" name="religion">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Permanent Address</label>
+                                <input type="text" class="form-control" name="permanent_address">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Temporary Address</label>
+                                <input type="text" class="form-control" name="temporary_address" id="temporary_address">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1" id="sameAsPermanent">
+                                    <label class="form-check-label" for="sameAsPermanent">
+                                        Same as permanent address
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Civil Status</label>
+                                <select class="form-select" name="civil_status">
+                                    <option value="">Select</option>
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Widowed">Widowed</option>
+                                    <option value="Separated">Separated</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Living Status</label>
+                                <select class="form-select" name="living_status">
+                                    <option value="">Select</option>
+                                    <option value="With Family">With Family</option>
+                                    <option value="Alone">Alone</option>
+                                    <option value="With Relatives">With Relatives</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Highest Educational Attainment</label>
+                                <select class="form-select" name="highest_education">
+                                    <option value="">Select</option>
+                                    <option value="None">None</option>
+                                    <option value="Elementary">Elementary</option>
+                                    <option value="High School">High School</option>
+                                    <option value="College">College</option>
+                                    <option value="Postgraduate">Postgraduate</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Occupation</label>
+                                <input type="text" class="form-control" name="occupation">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Monthly Income</label>
+                                <input type="number" class="form-control" name="monthly_income" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">PhilHealth Membership Number (PIN)</label>
+                                <input type="text" class="form-control" name="philhealth_pin">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Contributor Status</label>
+                                <select class="form-select" name="philhealth_contributor_status">
+                                    <option value="">Select</option>
+                                    <option value="Member">Member</option>
+                                    <option value="Dependent">Dependent</option>
+                                    <option value="Non-member">Non-member</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="mb-3" style="color:#186737;font-weight:700;">Family Composition</h6>
+                        <div class="row g-2 mb-2 fw-bold text-secondary" style="font-size:0.97rem;">
+                            <div class="col-md-4">Name (Last, First, Middle)</div>
+                            <div class="col-md-3">Date of Birth</div>
+                            <div class="col-md-2">Age</div>
+                            <div class="col-md-3">Relationship to Patient</div>
+                        </div>
+                        <div id="family-composition-rows">
+                            <div class="row g-2 mb-2 family-row">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="family_member_name[]" placeholder="Enter full name">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" class="form-control" name="family_member_birthdate[]">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" class="form-control" name="family_member_age[]" placeholder="Age" min="0">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" name="relationship_to_patient[]">
+                                        <option value="">Select</option>
+                                        <option value="Parent">Parent</option>
+                                        <option value="Sibling">Sibling</option>
+                                        <option value="Spouse">Spouse</option>
+                                        <option value="Child">Child</option>
+                                        <option value="Relative">Relative</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-success btn-sm mt-2" id="add-family-row">+ Add Family Member</button>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-4 gap-2">
+                <button type="button" class="btn btn-outline-success btn-lg backBtn w-50" data-back="1">Back</button>
+                <button type="button" class="btn btn-success btn-lg nextBtn w-50" data-next="3">Next</button>
+            </div>
+        </div>
+        <!-- Step 3, 4, 5 ... (repeat similar structure) -->
+        <!-- Final Step: Submit -->
+        <div class="form-step position-relative" id="step-5" style="display:none;">
+            <h5 class="mb-3" style="color:#186737;font-weight:700;">Summary</h5>
+            <!-- Show summary of all fields here -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-outline-success btn-lg backBtn" data-back="4">Back</button>
+                <button type="submit" class="btn btn-success btn-lg">Submit</button>
+            </div>
+        </div>
     </form>
 </div>
 <style>
@@ -132,9 +342,85 @@
     color: #186737;
     background: #fff;
 }
+.step.completed span {
+    background: #186737;
+    color: #fff;
+    border-color: #186737;
+}
 </style>
 <script>
-document.getElementById('nextBtn').onclick = function() {
-    // JS for step navigation will go here
-};
+const steps = document.querySelectorAll('.form-step');
+const stepper = document.querySelectorAll('.stepper .step');
+const nextBtns = document.querySelectorAll('.nextBtn');
+const backBtns = document.querySelectorAll('.backBtn');
+
+nextBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        const next = this.getAttribute('data-next');
+        steps.forEach(s => s.style.display = 'none');
+        document.getElementById('step-' + next).style.display = '';
+        stepper.forEach(st => st.classList.remove('active', 'completed'));
+        // Mark all previous steps as completed
+        for (let i = 0; i < stepper.length; i++) {
+            if (parseInt(stepper[i].getAttribute('data-step')) < next) {
+                stepper[i].classList.add('completed');
+            }
+        }
+        document.querySelector('.stepper .step[data-step="' + next + '"]').classList.add('active');
+    });
+});
+backBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        const back = this.getAttribute('data-back');
+        steps.forEach(s => s.style.display = 'none');
+        document.getElementById('step-' + back).style.display = '';
+        stepper.forEach(st => st.classList.remove('active', 'completed'));
+        // Mark all previous steps as completed
+        for (let i = 0; i < stepper.length; i++) {
+            if (parseInt(stepper[i].getAttribute('data-step')) < back) {
+                stepper[i].classList.add('completed');
+            }
+        }
+        document.querySelector('.stepper .step[data-step="' + back + '"]').classList.add('active');
+    });
+});
+
+document.getElementById('sameAsPermanent').addEventListener('change', function() {
+    if(this.checked) {
+        document.getElementById('temporary_address').value = document.querySelector('input[name="permanent_address"]').value;
+    } else {
+        document.getElementById('temporary_address').value = '';
+    }
+});
+
+// Family composition repeater
+const addFamilyRowBtn = document.getElementById('add-family-row');
+const familyRows = document.getElementById('family-composition-rows');
+addFamilyRowBtn.addEventListener('click', function() {
+    const row = document.createElement('div');
+    row.className = 'row g-2 mb-2 family-row';
+    row.innerHTML = `
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="family_member_name[]" placeholder="Enter full name">
+        </div>
+        <div class="col-md-3">
+            <input type="date" class="form-control" name="family_member_birthdate[]">
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" name="family_member_age[]" placeholder="Age" min="0">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" name="relationship_to_patient[]">
+                <option value="">Select</option>
+                <option value="Parent">Parent</option>
+                <option value="Sibling">Sibling</option>
+                <option value="Spouse">Spouse</option>
+                <option value="Child">Child</option>
+                <option value="Relative">Relative</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+    `;
+    familyRows.appendChild(row);
+});
 </script>

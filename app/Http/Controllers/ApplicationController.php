@@ -32,7 +32,19 @@ class ApplicationController extends Controller
             'Friend',
             'Other',
         ];
-        return view('application', compact('hospitals', 'categories', 'relations'));
+        // Office hours 10:00 AM to 5:00 PM, 30 min interval
+        $timeSelections = [];
+        $start = strtotime('10:00');
+        $end = strtotime('17:00');
+        for ($t = $start; $t <= $end; $t += 1800) {
+            $display = date('h:i A', $t);
+            $value = date('H:i', $t); // military format
+            $timeSelections[] = [
+                'label' => $display,
+                'value' => $value
+            ];
+        }
+        return view('application', compact('hospitals', 'categories', 'relations', 'timeSelections'));
     }
 
     public function submitForm1(Request $request)
@@ -55,7 +67,22 @@ class ApplicationController extends Controller
         $applicant->fill($validated);
         $applicant->save();
 
-        // For now, redirect back with a success message
-        return redirect()->back()->with('success', 'Form 1 submitted successfully!');
+        // Redirect to application route with applicant_id for next step
+        return redirect()->route('application.view', ['id' => $applicant->applicant_id]);
+    }
+
+    public function view($id)
+    {
+        $applicant = Applicant::findOrFail($id);
+        // Dummy data for dropdowns (reuse for step 2)
+        $genders = ['Male', 'Female', 'Other'];
+        $civilStatuses = ['Single', 'Married', 'Widowed', 'Separated'];
+        $livingStatuses = ['With Family', 'Alone', 'With Relatives'];
+        $educations = ['None', 'Elementary', 'High School', 'College', 'Postgraduate'];
+        $contributorStatuses = ['Member', 'Dependent', 'Non-member'];
+        $relations = [
+            'Parent', 'Sibling', 'Spouse', 'Child', 'Relative', 'Friend', 'Other',
+        ];
+        return view('application.form2', compact('applicant', 'genders', 'civilStatuses', 'livingStatuses', 'educations', 'contributorStatuses', 'relations'));
     }
 }
