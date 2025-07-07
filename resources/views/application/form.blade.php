@@ -291,7 +291,154 @@
                 <button type="button" class="btn btn-success btn-lg nextBtn w-50 ms-2" data-next="3" style="max-width:50%;">Next</button>
             </div>
         </div>
-        <!-- Step 3, 4, 5 ... (repeat similar structure) -->
+        <!-- Step 3 (MSWD) -->
+        <div class="form-step position-relative" id="step-3" style="display:none;">
+            <div class="application-form-card mb-4">
+                <h5 class="mb-3" style="color:#186737;font-weight:500;">MSWD Classification</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Main Classification</label>
+                        <select class="form-select" name="mswd_main_classification">
+                            <option value="">Select</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Sub Classification for Non PhilHealth Coverage</label>
+                        <select class="form-select" name="mswd_sub_classification">
+                            <option value="">Select</option>
+                            <option value="PWD">PWD</option>
+                            <option value="Senior Citizen">Senior Citizen</option>
+                            <option value="Solo Parent">Solo Parent</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Membership to Marginalized Sector</label>
+                        <select class="form-select" name="mswd_marginalized_sector">
+                            <option value="">Select</option>
+                            <option value="4Ps">4Ps</option>
+                            <option value="IP">IP</option>
+                            <option value="Fisherfolk">Fisherfolk</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">MSS Class</label>
+                        <select class="form-select" name="mswd_mss_class">
+                            <option value="">Select</option>
+                            <option value="Class 1">Class 1</option>
+                            <option value="Class 2">Class 2</option>
+                            <option value="Class 3">Class 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="application-form-card">
+                <h5 class="mb-3" style="color:#186737;font-weight:500;">Monthly Expenses</h5>
+                <div class="family-composition-bordered p-3">
+                    <div class="row mb-2" style="font-weight:500;">
+                        <div class="col-md-6">Particulars</div>
+                        <div class="col-md-6">Estimated Monthly Cost</div>
+                    </div>
+                    @php
+                    $expenses = [
+                        'Food', 'Education', 'Clothing', 'Transportation', 'Househelp', 'Medical Expenses',
+                        'Insurance Premium', 'Electric Bills', 'Water Bills', 'Gas / Fuel'
+                    ];
+                    @endphp
+                    @foreach($expenses as $expense)
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-6">{{ $expense }}</div>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control monthly-expense-input" name="monthly_expenses[{{ $expense }}]" min="0" step="0.01" value="0.00">
+                        </div>
+                    </div>
+                    @endforeach
+                    <div class="row align-items-center mt-3">
+                        <div class="col-md-6" style="font-weight:500;">TOTAL AMOUNT</div>
+                        <div class="col-md-6"><span id="monthly-expenses-total">0.00</span></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Buttons outside the card -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-outline-success btn-lg backBtn w-50 me-2" data-back="2" style="max-width:50%;">Back</button>
+                <button type="button" class="btn btn-success btn-lg nextBtn w-50 ms-2" data-next="4" style="max-width:50%;">Next</button>
+            </div>
+        </div>
+        <!-- Step 4 (Medical Data) -->
+        <div class="form-step position-relative" id="step-4" style="display:none;">
+            <div class="application-form-card mb-4">
+                <h5 class="mb-3" style="color:#186737;font-weight:500;">Medical Data</h5>
+                <!-- Medical history, allergies, etc. -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Do you have any allergies?</label>
+                        <select class="form-select" name="allergies">
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">If yes, please specify</label>
+                        <input type="text" class="form-control" name="allergies_details">
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Do you have any chronic illnesses?</label>
+                        <select class="form-select" name="chronic_illnesses">
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">If yes, please specify</label>
+                        <input type="text" class="form-control" name="chronic_illnesses_details">
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Are you currently taking any medications?</label>
+                        <select class="form-select" name="current_medications">
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">If yes, please specify</label>
+                        <input type="text" class="form-control" name="current_medications_details">
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Have you had any surgeries in the past?</label>
+                        <select class="form-select" name="past_surgeries">
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">If yes, please specify</label>
+                        <input type="text" class="form-control" name="past_surgeries_details">
+                    </div>
+                </div>
+            </div>
+            <!-- Buttons outside the card -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-outline-success btn-lg backBtn w-50 me-2" data-back="3" style="max-width:50%;">Back</button>
+                <button type="button" class="btn btn-success btn-lg nextBtn w-50 ms-2" data-next="5" style="max-width:50%;">Next</button>
+            </div>
+        </div>
+        <!-- Step 5, 6 ... (repeat similar structure) -->
         <!-- Final Step: Submit -->
         <div class="form-step position-relative" id="step-5" style="display:none;">
             <h5 class="mb-3" style="color:#186737;font-weight:700;">Summary</h5>
@@ -450,5 +597,23 @@ addFamilyRowBtn.addEventListener('click', function() {
         </div>
     `;
     familyRows.appendChild(row);
+});
+
+// Monthly Expenses total calculation
+function updateMonthlyExpensesTotal() {
+    let total = 0;
+    document.querySelectorAll('.monthly-expense-input').forEach(function(input) {
+        let val = parseFloat(input.value) || 0;
+        total += val;
+    });
+    document.getElementById('monthly-expenses-total').textContent = total.toFixed(2);
+}
+document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('monthly-expense-input')) {
+        updateMonthlyExpensesTotal();
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    updateMonthlyExpensesTotal();
 });
 </script>
