@@ -246,39 +246,43 @@
                 </div>
                 <!-- Card 2: Family Composition -->
                 <div class="application-form-card">
-                    <h5 class="mb-3" style="color:#186737;font-weight:500;">Family Composition</h6>
-                    <!-- Header Row -->
-                    <div class="row g-2 mb-1 family-header" style="font-weight:500;">
-                        <div class="col-md-4">Name (Last, First, Middle)</div>
-                        <div class="col-md-3">Date of Birth</div>
-                        <div class="col-md-2">Age</div>
-                        <div class="col-md-3">Relationship to Patient</div>
-                    </div>
-                    <div id="family-composition-rows">
-                        <div class="row g-2 mb-2 family-row">
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" name="family_member_name[]" placeholder="Enter full name">
-                            </div>
-                            <div class="col-md-3">
-                                <input type="date" class="form-control" name="family_member_birthdate[]">
-                            </div>
-                            <div class="col-md-2">
-                                <input type="number" class="form-control" name="family_member_age[]" placeholder="Age" min="0">
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select" name="relationship_to_patient[]">
-                                    <option value="">Select</option>
-                                    <option value="Parent">Parent</option>
-                                    <option value="Sibling">Sibling</option>
-                                    <option value="Spouse">Spouse</option>
-                                    <option value="Child">Child</option>
-                                    <option value="Relative">Relative</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
+                    <h5 class="mb-3" style="color:#186737;font-weight:500;">Family Composition</h5>
+                    <div class="family-composition-bordered p-3">
+                        <!-- Header Row -->
+                        <div class="row g-2 mb-1 family-header" style="font-weight:500;">
+                            <div class="col-md-4">Name (Last, First, Middle)</div>
+                            <div class="col-md-3">Date of Birth</div>
+                            <div class="col-md-2">Age</div>
+                            <div class="col-md-3">Relationship to Patient</div>
                         </div>
+                        <div id="family-composition-rows">
+                            @for ($i = 0; $i < 3; $i++)
+                            <div class="row g-2 mb-2 family-row">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="family_member_name[]" placeholder="Enter full name">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" class="form-control" name="family_member_birthdate[]">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" class="form-control" name="family_member_age[]" placeholder="Age" min="0">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" name="relationship_to_patient[]">
+                                        <option value="">Select</option>
+                                        <option value="Parent">Parent</option>
+                                        <option value="Sibling">Sibling</option>
+                                        <option value="Spouse">Spouse</option>
+                                        <option value="Child">Child</option>
+                                        <option value="Relative">Relative</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @endfor
+                        </div>
+                        <button type="button" class="btn btn-outline-success btn-sm mt-2" id="add-family-row">+ Add Family Member</button>
                     </div>
-                    <button type="button" class="btn btn-outline-success btn-sm mt-2" id="add-family-row">+ Add Family Member</button>
                 </div>
             </div>
             <!-- Buttons outside the cards -->
@@ -365,6 +369,11 @@
 }
 html, body, .container {
     min-height: 80vh;
+}
+.family-composition-bordered {
+    border: 1.4px solid #d9d9d9;
+    border-radius: 12px;
+    background: #fff;
 }
 </style>
 <script>
