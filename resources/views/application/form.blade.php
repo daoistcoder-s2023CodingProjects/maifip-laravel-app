@@ -703,6 +703,39 @@ document.addEventListener('input', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
     updateMonthlyExpensesTotal();
 });
+
+// --- Data Privacy Consent Checkbox State Persistence and Validation ---
+const consent1 = document.getElementById('consent1');
+const consent2 = document.getElementById('consent2');
+const submitBtn = document.getElementById('submitBtn');
+
+function updateConsentState() {
+    // Save state to localStorage
+    localStorage.setItem('maifip_consent1', consent1.checked ? '1' : '0');
+    localStorage.setItem('maifip_consent2', consent2.checked ? '1' : '0');
+    // Enable submit only if both are checked
+    submitBtn.disabled = !(consent1.checked && consent2.checked);
+}
+
+// Restore state on load
+function restoreConsentState() {
+    const c1 = localStorage.getItem('maifip_consent1');
+    const c2 = localStorage.getItem('maifip_consent2');
+    consent1.checked = c1 === '1';
+    consent2.checked = c2 === '1';
+    submitBtn.disabled = !(consent1.checked && consent2.checked);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    restoreConsentState();
+    // Also update on any change
+    consent1.addEventListener('change', updateConsentState);
+    consent2.addEventListener('change', updateConsentState);
+    // If form is reset, re-apply state
+    document.getElementById('maifip-multistep-form').addEventListener('reset', function() {
+        setTimeout(restoreConsentState, 10);
+    });
+});
 </script>
 <!-- Bootstrap 5 CSS & JS for Accordion functionality -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
