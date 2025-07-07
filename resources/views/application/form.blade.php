@@ -1,5 +1,5 @@
 <div class="application-form">
-    <!-- Stepper Navigation -->
+    <!-- Stepper Navigation (OUTSIDE the card) -->
     <div class="stepper mb-4">
         <div class="step active" data-step="1"><span>1</span><div>Initial</div></div>
         <div class="step" data-step="2"><span>2</span><div>Patient</div></div>
@@ -17,268 +17,272 @@
         </div>
         <!-- Step 1 -->
         <div class="form-step form-step-active position-relative" id="step-1">
-            <h5 class="mb-3" style="color:#186737;font-weight:700;">Initial Information</h5>
-            <div class="row g-3 mb-3">
-                <div class="col-md-4">
-                    <label class="form-label">Hospital Name</label>
-                    <select class="form-select" name="hospital_name" required>
-                        <option value="">Select hospital</option>
-                        @foreach($hospitals as $hospital)
-                            <option value="{{ $hospital }}">{{ $hospital }}</option>
-                        @endforeach
-                    </select>
+            <div class="application-form-card">
+                <h5 class="mb-3" style="color:#186737;font-weight:700;">Initial Information</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Hospital Name</label>
+                        <select class="form-select" name="hospital_name" required>
+                            <option value="">Select hospital</option>
+                            @foreach($hospitals as $hospital)
+                                <option value="{{ $hospital }}">{{ $hospital }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category" required>
+                            <option value="">Select category</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat }}">{{ $cat }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Date of Interview</label>
+                        <input type="date" class="form-control" name="interview_date" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Venue of Interview</label>
+                        <input type="text" class="form-control" name="interview_venue" placeholder="Add venue" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Start of Interview</label>
+                        <select class="form-select" name="interview_start_time" required>
+                            <option value="">Select time</option>
+                            @foreach($timeSelections as $time)
+                                <option value="{{ $time['value'] }}">{{ $time['label'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">End of Interview</label>
+                        <select class="form-select" name="interview_end_time" required>
+                            <option value="">Select time</option>
+                            @foreach($timeSelections as $time)
+                                <option value="{{ $time['value'] }}">{{ $time['label'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Category</label>
-                    <select class="form-select" name="category" required>
-                        <option value="">Select category</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat }}">{{ $cat }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Date of Interview</label>
-                    <input type="date" class="form-control" name="interview_date" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Venue of Interview</label>
-                    <input type="text" class="form-control" name="interview_venue" placeholder="Add venue" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Start of Interview</label>
-                    <select class="form-select" name="interview_start_time" required>
-                        <option value="">Select time</option>
-                        @foreach($timeSelections as $time)
-                            <option value="{{ $time['value'] }}">{{ $time['label'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">End of Interview</label>
-                    <select class="form-select" name="interview_end_time" required>
-                        <option value="">Select time</option>
-                        @foreach($timeSelections as $time)
-                            <option value="{{ $time['value'] }}">{{ $time['label'] }}</option>
-                        @endforeach
-                    </select>
+                <h5 class="mb-3" style="color:#186737;font-weight:700;">Referral Information</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Name of Informant</label>
+                        <input type="text" class="form-control" name="informant_name" placeholder="Add complete name" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Relation to Patient</label>
+                        <select class="form-select" name="relation_to_patient" required>
+                            <option value="">Select</option>
+                            @foreach($relations as $rel)
+                                <option value="{{ $rel }}">{{ $rel }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Contact Number</label>
+                        <input type="text" class="form-control" name="informant_contact_number" placeholder="Add contact" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-control" name="informant_address" placeholder="Add complete address" required>
+                    </div>
                 </div>
             </div>
-            <h5 class="mb-3" style="color:#186737;font-weight:700;">Referral Information</h5>
-            <div class="row g-3 mb-3">
-                <div class="col-md-4">
-                    <label class="form-label">Name of Informant</label>
-                    <input type="text" class="form-control" name="informant_name" placeholder="Add complete name" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Relation to Patient</label>
-                    <select class="form-select" name="relation_to_patient" required>
-                        <option value="">Select</option>
-                        @foreach($relations as $rel)
-                            <option value="{{ $rel }}">{{ $rel }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Contact Number</label>
-                    <input type="text" class="form-control" name="informant_contact_number" placeholder="Add contact" required>
-                </div>
-                <div class="col-md-12">
-                    <label class="form-label">Address</label>
-                    <input type="text" class="form-control" name="informant_address" placeholder="Add complete address" required>
-                </div>
-            </div>
+            <!-- Buttons outside the card -->
             <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-outline-success btn-lg" id="backBtn1" disabled>Back</button>
-                <button type="button" class="btn btn-success btn-lg nextBtn" data-next="2">Next</button>
+                <button type="button" class="btn btn-outline-success btn-lg w-50 me-2" id="backBtn1" disabled style="max-width:50%;">Back</button>
+                <button type="button" class="btn btn-success btn-lg w-50 ms-2 nextBtn" data-next="2" style="max-width:50%;">Next</button>
             </div>
         </div>
         <!-- Step 2 (Patient Information) -->
         <div class="form-step position-relative" id="step-2" style="display:none;">
             <div class="container-fluid px-0">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="mb-3" style="color:#186737;font-weight:700;">Patient Information</h5>
-                        <div class="row g-3 mb-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Family Name</label>
-                                <input type="text" class="form-control" name="patient_family_name" required>
+                <!-- Card 1: Patient Info -->
+                <div class="application-form-card mb-4">
+                    <h5 class="mb-3" style="color:#186737;font-weight:700;">Family Composition</h6>
+                    <!-- Header Row -->
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Family Name</label>
+                            <input type="text" class="form-control" name="patient_family_name" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="patient_first_name" required>
+                        </div>
+                        <div class="col-md-4 d-flex gap-2">
+                            <div style="flex:2">
+                                <label class="form-label">Middle Name</label>
+                                <input type="text" class="form-control" name="patient_middle_name">
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" name="patient_first_name" required>
-                            </div>
-                            <div class="col-md-4 d-flex gap-2">
-                                <div style="flex:2">
-                                    <label class="form-label">Middle Name</label>
-                                    <input type="text" class="form-control" name="patient_middle_name">
-                                </div>
-                                <div style="flex:1">
-                                    <label class="form-label">Extension</label>
-                                    <input type="text" class="form-control" name="patient_extension" placeholder="Sr, Jr, III...">
-                                </div>
+                            <div style="flex:1">
+                                <label class="form-label">Extension</label>
+                                <input type="text" class="form-control" name="patient_extension" placeholder="Sr, Jr, III...">
                             </div>
                         </div>
-                        <div class="row g-3 mb-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Date of Birth</label>
-                                <input type="date" class="form-control" name="patient_birthdate" required>
+                    </div>
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" name="patient_birthdate" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Age</label>
+                            <input type="number" class="form-control" name="patient_age" min="0">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select" name="patient_gender" required>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" name="patient_contact_number">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Place of Birth</label>
+                            <input type="text" class="form-control" name="place_of_birth">
+                        </div>
+                        <div class="col-md-4 d-flex gap-2">
+                            <div style="flex:1">
+                                <label class="form-label">Nationality</label>
+                                <input type="text" class="form-control" name="nationality">
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Age</label>
-                                <input type="number" class="form-control" name="patient_age" min="0">
+                            <div style="flex:1">
+                                <label class="form-label">Religion</label>
+                                <input type="text" class="form-control" name="religion">
                             </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-12">
+                            <label class="form-label">Permanent Address</label>
+                            <input type="text" class="form-control" name="permanent_address">
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-12">
+                            <label class="form-label">Temporary Address</label>
+                            <input type="text" class="form-control" name="temporary_address" id="temporary_address">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="sameAsPermanent">
+                                <label class="form-check-label" for="sameAsPermanent">
+                                    Same as permanent address
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Civil Status</label>
+                            <select class="form-select" name="civil_status">
+                                <option value="">Select</option>
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Widowed">Widowed</option>
+                                <option value="Separated">Separated</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Living Status</label>
+                            <select class="form-select" name="living_status">
+                                <option value="">Select</option>
+                                <option value="With Family">With Family</option>
+                                <option value="Alone">Alone</option>
+                                <option value="With Relatives">With Relatives</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Highest Educational Attainment</label>
+                            <select class="form-select" name="highest_education">
+                                <option value="">Select</option>
+                                <option value="None">None</option>
+                                <option value="Elementary">Elementary</option>
+                                <option value="High School">High School</option>
+                                <option value="College">College</option>
+                                <option value="Postgraduate">Postgraduate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-6">
+                            <label class="form-label">Occupation</label>
+                            <input type="text" class="form-control" name="occupation">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Monthly Income</label>
+                            <input type="number" class="form-control" name="monthly_income" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-2">
+                        <div class="col-md-6">
+                            <label class="form-label">PhilHealth Membership Number (PIN)</label>
+                            <input type="text" class="form-control" name="philhealth_pin">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contributor Status</label>
+                            <select class="form-select" name="philhealth_contributor_status">
+                                <option value="">Select</option>
+                                <option value="Member">Member</option>
+                                <option value="Dependent">Dependent</option>
+                                <option value="Non-member">Non-member</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2: Family Composition -->
+                <div class="application-form-card">
+                    <h5 class="mb-3" style="color:#186737;font-weight:700;">Family Composition</h6>
+                    <!-- Header Row -->
+                    <div class="row g-2 mb-1 family-header" style="font-weight:500;">
+                        <div class="col-md-4">Name (Last, First, Middle)</div>
+                        <div class="col-md-3">Date of Birth</div>
+                        <div class="col-md-2">Age</div>
+                        <div class="col-md-3">Relationship to Patient</div>
+                    </div>
+                    <div id="family-composition-rows">
+                        <div class="row g-2 mb-2 family-row">
                             <div class="col-md-4">
-                                <label class="form-label">Gender</label>
-                                <select class="form-select" name="patient_gender" required>
+                                <input type="text" class="form-control" name="family_member_name[]" placeholder="Enter full name">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="date" class="form-control" name="family_member_birthdate[]">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" class="form-control" name="family_member_age[]" placeholder="Age" min="0">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="relationship_to_patient[]">
                                     <option value="">Select</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                    <option value="Parent">Parent</option>
+                                    <option value="Sibling">Sibling</option>
+                                    <option value="Spouse">Spouse</option>
+                                    <option value="Child">Child</option>
+                                    <option value="Relative">Relative</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="row g-3 mb-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Contact Number</label>
-                                <input type="text" class="form-control" name="patient_contact_number">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Place of Birth</label>
-                                <input type="text" class="form-control" name="place_of_birth">
-                            </div>
-                            <div class="col-md-4 d-flex gap-2">
-                                <div style="flex:1">
-                                    <label class="form-label">Nationality</label>
-                                    <input type="text" class="form-control" name="nationality">
-                                </div>
-                                <div style="flex:1">
-                                    <label class="form-label">Religion</label>
-                                    <input type="text" class="form-control" name="religion">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-3 mb-2">
-                            <div class="col-md-12">
-                                <label class="form-label">Permanent Address</label>
-                                <input type="text" class="form-control" name="permanent_address">
-                            </div>
-                        </div>
-                        <div class="row g-3 mb-2">
-                            <div class="col-md-12">
-                                <label class="form-label">Temporary Address</label>
-                                <input type="text" class="form-control" name="temporary_address" id="temporary_address">
-                            </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="1" id="sameAsPermanent">
-                                    <label class="form-check-label" for="sameAsPermanent">
-                                        Same as permanent address
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-3 mb-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Civil Status</label>
-                                <select class="form-select" name="civil_status">
-                                    <option value="">Select</option>
-                                    <option value="Single">Single</option>
-                                    <option value="Married">Married</option>
-                                    <option value="Widowed">Widowed</option>
-                                    <option value="Separated">Separated</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Living Status</label>
-                                <select class="form-select" name="living_status">
-                                    <option value="">Select</option>
-                                    <option value="With Family">With Family</option>
-                                    <option value="Alone">Alone</option>
-                                    <option value="With Relatives">With Relatives</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Highest Educational Attainment</label>
-                                <select class="form-select" name="highest_education">
-                                    <option value="">Select</option>
-                                    <option value="None">None</option>
-                                    <option value="Elementary">Elementary</option>
-                                    <option value="High School">High School</option>
-                                    <option value="College">College</option>
-                                    <option value="Postgraduate">Postgraduate</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row g-3 mb-2">
-                            <div class="col-md-6">
-                                <label class="form-label">Occupation</label>
-                                <input type="text" class="form-control" name="occupation">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Monthly Income</label>
-                                <input type="number" class="form-control" name="monthly_income" min="0" step="0.01">
-                            </div>
-                        </div>
-                        <div class="row g-3 mb-2">
-                            <div class="col-md-6">
-                                <label class="form-label">PhilHealth Membership Number (PIN)</label>
-                                <input type="text" class="form-control" name="philhealth_pin">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Contributor Status</label>
-                                <select class="form-select" name="philhealth_contributor_status">
-                                    <option value="">Select</option>
-                                    <option value="Member">Member</option>
-                                    <option value="Dependent">Dependent</option>
-                                    <option value="Non-member">Non-member</option>
-                                </select>
-                            </div>
-                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="mb-3" style="color:#186737;font-weight:700;">Family Composition</h6>
-                        <div class="row g-2 mb-2 fw-bold text-secondary" style="font-size:0.97rem;">
-                            <div class="col-md-4">Name (Last, First, Middle)</div>
-                            <div class="col-md-3">Date of Birth</div>
-                            <div class="col-md-2">Age</div>
-                            <div class="col-md-3">Relationship to Patient</div>
-                        </div>
-                        <div id="family-composition-rows">
-                            <div class="row g-2 mb-2 family-row">
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control" name="family_member_name[]" placeholder="Enter full name">
-                                </div>
-                                <div class="col-md-3">
-                                    <input type="date" class="form-control" name="family_member_birthdate[]">
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" class="form-control" name="family_member_age[]" placeholder="Age" min="0">
-                                </div>
-                                <div class="col-md-3">
-                                    <select class="form-select" name="relationship_to_patient[]">
-                                        <option value="">Select</option>
-                                        <option value="Parent">Parent</option>
-                                        <option value="Sibling">Sibling</option>
-                                        <option value="Spouse">Spouse</option>
-                                        <option value="Child">Child</option>
-                                        <option value="Relative">Relative</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-outline-success btn-sm mt-2" id="add-family-row">+ Add Family Member</button>
-                    </div>
+                    <button type="button" class="btn btn-outline-success btn-sm mt-2" id="add-family-row">+ Add Family Member</button>
                 </div>
             </div>
-            <div class="d-flex justify-content-between mt-4 gap-2">
-                <button type="button" class="btn btn-outline-success btn-lg backBtn w-50" data-back="1">Back</button>
-                <button type="button" class="btn btn-success btn-lg nextBtn w-50" data-next="3">Next</button>
+            <!-- Buttons outside the cards -->
+            <div class="d-flex justify-content-between mt-4 ">
+                <button type="button" class="btn btn-outline-success btn-lg backBtn w-50 me-2" data-back="1" style="max-width:50%;">Back</button>
+                <button type="button" class="btn btn-success btn-lg nextBtn w-50 ms-2" data-next="3" style="max-width:50%;">Next</button>
             </div>
         </div>
         <!-- Step 3, 4, 5 ... (repeat similar structure) -->
@@ -295,6 +299,12 @@
 </div>
 <style>
 .application-form {
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin-top: 0;
+}
+.application-form-card {
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 4px 24px 0 rgba(24, 103, 55, 0.04);
@@ -346,6 +356,9 @@
     background: #186737;
     color: #fff;
     border-color: #186737;
+}
+html, body, .container {
+    min-height: 80vh;
 }
 </style>
 <script>
