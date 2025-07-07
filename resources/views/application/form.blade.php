@@ -415,14 +415,76 @@
                 <button type="button" class="btn btn-success btn-lg nextBtn w-50 ms-2" data-next="5" style="max-width:50%;">Next</button>
             </div>
         </div>
-        <!-- Step 5, 6 ... (repeat similar structure) -->
-        <!-- Final Step: Submit -->
+        <!-- Step 5: Summary Accordion and Privacy Consent -->
         <div class="form-step position-relative" id="step-5" style="display:none;">
-            <h5 class="mb-3" style="color:#186737;font-weight:700;">Summary</h5>
-            <!-- Show summary of all fields here -->
+            <div class="accordion" id="summaryAccordion">
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingInitial">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInitial" aria-expanded="false" aria-controls="collapseInitial" style="font-weight:600;color:#186737;">
+                            Initial Information
+                        </button>
+                    </h2>
+                    <div id="collapseInitial" class="accordion-collapse collapse" aria-labelledby="headingInitial" data-bs-parent="#summaryAccordion">
+                        <div class="accordion-body">
+                            <!-- Initial Information fields go here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingPatient">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePatient" aria-expanded="false" aria-controls="collapsePatient" style="font-weight:600;color:#186737;">
+                            Patient Information
+                        </button>
+                    </h2>
+                    <div id="collapsePatient" class="accordion-collapse collapse" aria-labelledby="headingPatient" data-bs-parent="#summaryAccordion">
+                        <div class="accordion-body">
+                            <!-- Patient Information fields go here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingMSWD">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMSWD" aria-expanded="false" aria-controls="collapseMSWD" style="font-weight:600;color:#186737;">
+                            MSWD Classification
+                        </button>
+                    </h2>
+                    <div id="collapseMSWD" class="accordion-collapse collapse" aria-labelledby="headingMSWD" data-bs-parent="#summaryAccordion">
+                        <div class="accordion-body">
+                            <!-- MSWD Classification fields go here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingMedical">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMedical" aria-expanded="false" aria-controls="collapseMedical" style="font-weight:600;color:#186737;">
+                            Medical Data
+                        </button>
+                    </h2>
+                    <div id="collapseMedical" class="accordion-collapse collapse" aria-labelledby="headingMedical" data-bs-parent="#summaryAccordion">
+                        <div class="accordion-body">
+                            <!-- Medical Data fields go here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="application-form-card mt-4">
+                <h5 class="mb-3" style="color:#186737;font-weight:600;">Data Privacy Consent & Certification</h5>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="consent1">
+                    <label class="form-check-label" for="consent1">
+                        I allow the Local Government to use my personal information to process my request for medical assistance. In accordance with the Data Privacy Act of 2012, and its implementing rules and regulations effective September 8, 2016.
+                    </label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="consent2">
+                    <label class="form-check-label" for="consent2">
+                        I understand that our request for assistance from the Medical Social Service is subject to the outcome of the Social Worker's interview with us. Any false information we provide can be used as a reason to invalidate our request for assistance. Due to this, we will pay all of our patient's bills here at the hospital.
+                    </label>
+                </div>
+            </div>
             <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-outline-success btn-lg backBtn" data-back="4">Back</button>
-                <button type="submit" class="btn btn-success btn-lg">Submit</button>
+                <button type="button" class="btn btn-outline-success btn-lg backBtn w-50 me-2" data-back="4" style="max-width:50%;">Back</button>
+                <button type="submit" class="btn btn-success btn-lg w-50 ms-2" id="submitBtn" style="max-width:50%;">Submit Application</button>
             </div>
         </div>
     </form>
@@ -498,6 +560,9 @@ html, body, .container {
     border: 1.4px solid #d9d9d9;
     border-radius: 12px;
     background: #fff;
+}
+body, .application-form {
+    background: #f8f9fa !important;
 }
 </style>
 <script>
@@ -594,3 +659,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateMonthlyExpensesTotal();
 });
 </script>
+<!-- Bootstrap 5 CSS & JS for Accordion functionality -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
