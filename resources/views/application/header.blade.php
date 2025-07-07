@@ -25,7 +25,7 @@
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 4px 24px 0 rgba(24, 103, 55, 0.04);
-    padding: 2.5rem 2rem 2rem 2rem;
+    padding: 1.5rem 2rem 1.5rem 2rem;
     margin-top: 2rem;
 }
 .application-form {
