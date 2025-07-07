@@ -14,7 +14,18 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    padding: 0 5vw;
+    padding: 0 7vw;
+    box-sizing: border-box;
+}
+.hero-inner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 4vw;
 }
 .hero-content {
     flex: 1;
@@ -22,31 +33,66 @@ body {
     flex-direction: column;
     justify-content: center;
     gap: 1.5rem;
+    align-items: flex-start;
+    max-width: 600px;
 }
 .hero-title {
-    color: #217A4B;
-    font-size: 2.5rem;
+    color: #186737;
+    font-size: 2.8rem;
     font-weight: 700;
+    line-height: 1.15;
 }
 .hero-buttons {
-    margin-top: 1.5rem;
+    margin-top: 2.2rem;
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
+    width: 85%;
+    max-width: 510px;
 }
 .hero-buttons .btn {
-    padding: 0.75rem 2rem;
-    font-size: 1.1rem;
-    border-radius: 6px;
+    font-size: 1.13rem;
+    border-radius: 7px;
+    font-weight: 700;
+    min-height: 52px;
+    box-sizing: border-box;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    padding: 0.7rem 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-buttons .btn-primary {
+    background: #186737;
+    color: #fff;
+    border: none;
+    flex: 2 1 0%; /* longer button */
+}
+.hero-buttons .btn-primary:hover {
+    background: #14562c;
+}
+.hero-buttons .btn-outline {
+    background: #fff;
+    color: #186737;
+    border: 2px solid #186737;
+    flex: 1 1 0%; /* same size as nav-apply-btn */
+    min-width: 130px;
+    max-width: 180px;
+}
+.hero-buttons .btn-outline:hover {
+    background: #eaf8f2;
+    color: #14562c;
+    border-color: #14562c;
 }
 .hero-img {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    max-width: 500px;
 }
 .hero-img img {
-    max-width: 350px;
-    width: 100%;
+    max-width: 100%;
+    width: 420px;
     height: auto;
 }
 .section {
@@ -61,7 +107,7 @@ body {
 .section-title {
     font-size: 2rem;
     font-weight: 700;
-    color: #217A4B;
+    color: #186737;
     margin-bottom: 2rem;
     text-align: center;
     width: 100%;
@@ -79,7 +125,7 @@ body {
 .beneficiaries-cards .card {
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 24px 0 rgba(33, 122, 75, 0.04);
+    box-shadow: 0 4px 24px 0 rgba(24, 103, 55, 0.04);
     border: 2px solid #EAF8F2;
     min-width: 346.67px;
     max-width: 346.67px;
@@ -121,7 +167,7 @@ body {
 .services-section-title {
     font-size: 2rem;
     font-weight: 700;
-    color: #217A4B;
+    color: #186737;
     margin-bottom: 1.25rem;
     text-align: center;
     width: 100%;
@@ -139,7 +185,7 @@ body {
 .services-cards .card {
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 4px 24px 0 rgba(33, 122, 75, 0.04);
+    box-shadow: 0 4px 24px 0 rgba(24, 103, 55, 0.04);
     border: 2px solid #EAF8F2;
     min-width: 320px;
     max-width: 370px;
@@ -185,7 +231,7 @@ body {
     line-height: 1.3;
 }
 footer {
-    background: #217A4B;
+    background: #186737;
     color: #fff;
     text-align: center;
     padding: 2.5rem 0 2rem 0;
@@ -207,7 +253,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.2rem 3vw 1.2rem 2vw;
+    padding: 1.2rem 6vw 1.2rem 4vw; /* doubled left/right padding */
     box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     z-index: 100;
 }
@@ -229,7 +275,7 @@ footer {
 .maifip-title {
     font-size: 1.35rem;
     font-weight: 700;
-    color: #217A4B;
+    color: #186737;
     letter-spacing: 2px;
 }
 .maifip-desc {
@@ -244,22 +290,34 @@ footer {
     gap: 1.2rem;
 }
 .nav-link {
-    color: #217A4B;
+    color: #111;
     font-weight: 500;
     text-decoration: none;
-    font-size: 1.05rem;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    transition: background 0.2s;
+    font-size: 1.13rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 7px;
+    transition: background 0.2s, color 0.2s;
+    background: transparent;
 }
 .nav-link:hover {
     background: #eaf8f2;
+    color: #186737;
 }
 .nav-apply-btn {
-    padding: 0.5rem 1.5rem;
-    font-size: 1.05rem;
-    border-radius: 6px;
-    font-weight: 600;
+    background: #186737;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 2.2rem;
+    font-size: 1.13rem;
+    border-radius: 7px;
+    font-weight: 700;
+    min-width: 130px;
+    min-height: 52px;
+    box-shadow: 0 2px 8px rgba(24, 103, 55, 0.08);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.nav-apply-btn:hover {
+    background: #14562c;
 }
 @media (max-width: 900px) {
     .hero-section, .section {
@@ -286,6 +344,17 @@ footer {
     }
 }
 @media (max-width: 1200px) {
+    .hero-section, .hero-inner {
+        flex-direction: column;
+        padding: 2rem 1rem;
+        gap: 2rem;
+    }
+    .hero-content, .hero-img {
+        max-width: 100%;
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
     .beneficiaries-cards {
         flex-direction: column;
         align-items: center;
