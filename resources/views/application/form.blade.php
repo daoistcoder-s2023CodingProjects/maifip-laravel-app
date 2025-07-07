@@ -8,63 +8,76 @@
         <div class="step"><span>5</span><div>Summary</div></div>
     </div>
     <!-- Multi-step Form -->
-    <form id="maifip-multistep-form">
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    <form id="maifip-multistep-form" method="POST" action="{{ route('application.form1.submit') }}">
+        @csrf
         <div class="form-step form-step-active" id="step-1">
             <h5 class="mb-3" style="color:#186737;font-weight:700;">Initial Information</h5>
             <div class="row g-3 mb-3">
                 <div class="col-md-4">
                     <label class="form-label">Hospital Name</label>
-                    <select class="form-select" name="hospital_name">
+                    <select class="form-select" name="hospital_name" required>
                         <option value="">Select hospital</option>
+                        @foreach($hospitals as $hospital)
+                            <option value="{{ $hospital }}">{{ $hospital }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Category</label>
-                    <select class="form-select" name="category">
+                    <select class="form-select" name="category" required>
                         <option value="">Select category</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat }}">{{ $cat }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Date of Interview</label>
-                    <input type="date" class="form-control" name="interview_date">
+                    <input type="date" class="form-control" name="interview_date" required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Venue of Interview</label>
-                    <input type="text" class="form-control" name="interview_venue" placeholder="Add venue">
+                    <input type="text" class="form-control" name="interview_venue" placeholder="Add venue" required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Start of Interview</label>
-                    <input type="text" class="form-control" name="interview_start_time" placeholder="Add time AM/PM">
+                    <input type="text" class="form-control" name="interview_start_time" placeholder="Add time AM/PM" required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">End of Interview</label>
-                    <input type="text" class="form-control" name="interview_end_time" placeholder="Add time AM/PM">
+                    <input type="text" class="form-control" name="interview_end_time" placeholder="Add time AM/PM" required>
                 </div>
             </div>
             <h5 class="mb-3" style="color:#186737;font-weight:700;">Referral Information</h5>
             <div class="row g-3 mb-3">
                 <div class="col-md-4">
                     <label class="form-label">Name of Informant</label>
-                    <input type="text" class="form-control" name="informant_name" placeholder="Add complete name">
+                    <input type="text" class="form-control" name="informant_name" placeholder="Add complete name" required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Relation to Patient</label>
-                    <select class="form-select" name="relation_to_patient">
+                    <select class="form-select" name="relation_to_patient" required>
                         <option value="">Select</option>
+                        @foreach($relations as $rel)
+                            <option value="{{ $rel }}">{{ $rel }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Contact Number</label>
-                    <input type="text" class="form-control" name="informant_contact_number" placeholder="Add contact">
+                    <input type="text" class="form-control" name="informant_contact_number" placeholder="Add contact" required>
                 </div>
                 <div class="col-md-12">
                     <label class="form-label">Address</label>
-                    <input type="text" class="form-control" name="informant_address" placeholder="Add complete address">
+                    <input type="text" class="form-control" name="informant_address" placeholder="Add complete address" required>
                 </div>
             </div>
             <div class="d-flex justify-content-between mt-4">
                 <button type="button" class="btn btn-outline-success btn-lg" disabled>Back</button>
-                <button type="button" class="btn btn-success btn-lg" id="nextBtn">Next</button>
+                <button type="submit" class="btn btn-success btn-lg" id="nextBtn">Next</button>
             </div>
         </div>
         <!-- Steps 2-4 and Summary will be added here in the next steps -->

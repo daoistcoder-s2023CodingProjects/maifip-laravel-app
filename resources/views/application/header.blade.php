@@ -1,5 +1,5 @@
-<nav class="maifip-navbar">
-    <div class="navbar-left">
+<nav class="maifip-navbar" style="justify-content: center;">
+    <div class="navbar-left" style="margin: 0 auto;">
         <img src="/images/maifip_logo.png" alt="MAIFIP Logo" class="maifip-logo">
         <div class="maifip-brand">
             <div class="maifip-title">MAIFIP</div>

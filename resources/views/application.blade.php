@@ -4,5 +4,5 @@
 
 @section('content')
 <link rel="stylesheet" href="/css/landing.css">
-@include('application.header')
+@include('application.header', ['hospitals' => $hospitals, 'categories' => $categories, 'relations' => $relations])
 @endsection
