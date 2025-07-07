@@ -59,7 +59,7 @@
 
 <!-- Medical Services Section -->
 <div class="section medical-services-section">
-    <div class="section-title">MAIFIP Medical Services</div>
+    <div class="services-section-title">MAIFIP Medical Services</div>
     <div class="services-cards">
         <div class="card">
             <img src="/images/drugs_logo.png" alt="Drugs & Medicines">
@@ -96,7 +96,7 @@
 
 <!-- Footer -->
 <footer>
-    <div style="font-size:1.5rem;font-weight:700;letter-spacing:0.2em;">M A I F I P</div>
-    <div style="font-size:1.1rem;">Medical Assistance to Indigent and Financially Incapacitated Patients</div>
+    <div style="font-size:1.2rem;font-weight:700;letter-spacing:0.2em;">M A I F I P</div>
+    <div style="font-size:0.88rem;">Medical Assistance to Indigent and Financially Incapacitated Patients</div>
 </footer>
 @endsection
