@@ -34,20 +34,25 @@ body {
     justify-content: center;
     gap: 1.5rem;
     align-items: flex-start;
-    max-width: 600px;
+    max-width: 500px;
+}
+.hero-description {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin-bottom: 0;
 }
 .hero-title {
     color: #186737;
-    font-size: 2.8rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.5;
 }
 .hero-buttons {
-    margin-top: 2.2rem;
+    margin-top: 0.5rem;
     display: flex;
     gap: 1.5rem;
     width: 85%;
-    max-width: 510px;
+    max-width: 550px;
 }
 .hero-buttons .btn {
     font-size: 1.13rem;
@@ -56,7 +61,7 @@ body {
     min-height: 52px;
     box-sizing: border-box;
     transition: background 0.2s, color 0.2s, border 0.2s;
-    padding: 0.7rem 2.2rem;
+    padding: 1.35rem 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -253,7 +258,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.2rem 6vw 1.2rem 4vw; /* doubled left/right padding */
+    padding: 1.2rem 8vw 1.2rem 8vw;
     box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     z-index: 100;
 }
@@ -307,10 +312,10 @@ footer {
     background: #186737;
     color: #fff;
     border: none;
-    padding: 0.7rem 2.2rem;
+    padding: 0.9rem 1.25rem;
     font-size: 1.13rem;
     border-radius: 7px;
-    font-weight: 700;
+    font-weight: 500;
     min-width: 130px;
     min-height: 52px;
     box-shadow: 0 2px 8px rgba(24, 103, 55, 0.08);
