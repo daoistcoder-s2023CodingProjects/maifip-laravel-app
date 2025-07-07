@@ -447,7 +447,28 @@
                     </h2>
                     <div id="collapsePatient" class="accordion-collapse collapse" aria-labelledby="headingPatient" data-bs-parent="#summaryAccordion">
                         <div class="accordion-body">
-                            <!-- Patient Information fields go here -->
+                            <div class="mb-2"><strong>Family Name:</strong> <span id="summary_patient_family_name"></span></div>
+                            <div class="mb-2"><strong>First Name:</strong> <span id="summary_patient_first_name"></span></div>
+                            <div class="mb-2"><strong>Middle Name:</strong> <span id="summary_patient_middle_name"></span></div>
+                            <div class="mb-2"><strong>Extension:</strong> <span id="summary_patient_extension"></span></div>
+                            <div class="mb-2"><strong>Date of Birth:</strong> <span id="summary_patient_birthdate"></span></div>
+                            <div class="mb-2"><strong>Age:</strong> <span id="summary_patient_age"></span></div>
+                            <div class="mb-2"><strong>Gender:</strong> <span id="summary_patient_gender"></span></div>
+                            <div class="mb-2"><strong>Contact Number:</strong> <span id="summary_patient_contact_number"></span></div>
+                            <div class="mb-2"><strong>Place of Birth:</strong> <span id="summary_place_of_birth"></span></div>
+                            <div class="mb-2"><strong>Nationality:</strong> <span id="summary_nationality"></span></div>
+                            <div class="mb-2"><strong>Religion:</strong> <span id="summary_religion"></span></div>
+                            <div class="mb-2"><strong>Permanent Address:</strong> <span id="summary_permanent_address"></span></div>
+                            <div class="mb-2"><strong>Temporary Address:</strong> <span id="summary_temporary_address"></span></div>
+                            <div class="mb-2"><strong>Civil Status:</strong> <span id="summary_civil_status"></span></div>
+                            <div class="mb-2"><strong>Living Status:</strong> <span id="summary_living_status"></span></div>
+                            <div class="mb-2"><strong>Highest Educational Attainment:</strong> <span id="summary_highest_education"></span></div>
+                            <div class="mb-2"><strong>Occupation:</strong> <span id="summary_occupation"></span></div>
+                            <div class="mb-2"><strong>Monthly Income:</strong> <span id="summary_monthly_income"></span></div>
+                            <div class="mb-2"><strong>PhilHealth PIN:</strong> <span id="summary_philhealth_pin"></span></div>
+                            <div class="mb-2"><strong>Contributor Status:</strong> <span id="summary_philhealth_contributor_status"></span></div>
+                            <div class="mb-2 mt-4"><strong>Family Composition:</strong></div>
+                            <div id="summary_family_composition"></div>
                         </div>
                     </div>
                 </div>
@@ -628,6 +649,43 @@ nextBtns.forEach(btn => {
             document.getElementById('summary_relation_to_patient').textContent = document.querySelector('[name="relation_to_patient"]').value;
             document.getElementById('summary_informant_contact_number').textContent = document.querySelector('[name="informant_contact_number"]').value;
             document.getElementById('summary_informant_address').textContent = document.querySelector('[name="informant_address"]').value;
+            // Step 2: Patient Information
+            document.getElementById('summary_patient_family_name').textContent = document.querySelector('[name="patient_family_name"]').value;
+            document.getElementById('summary_patient_first_name').textContent = document.querySelector('[name="patient_first_name"]').value;
+            document.getElementById('summary_patient_middle_name').textContent = document.querySelector('[name="patient_middle_name"]').value;
+            document.getElementById('summary_patient_extension').textContent = document.querySelector('[name="patient_extension"]').value;
+            document.getElementById('summary_patient_birthdate').textContent = document.querySelector('[name="patient_birthdate"]').value;
+            document.getElementById('summary_patient_age').textContent = document.querySelector('[name="patient_age"]').value;
+            document.getElementById('summary_patient_gender').textContent = document.querySelector('[name="patient_gender"]').value;
+            document.getElementById('summary_patient_contact_number').textContent = document.querySelector('[name="patient_contact_number"]').value;
+            document.getElementById('summary_place_of_birth').textContent = document.querySelector('[name="place_of_birth"]').value;
+            document.getElementById('summary_nationality').textContent = document.querySelector('[name="nationality"]').value;
+            document.getElementById('summary_religion').textContent = document.querySelector('[name="religion"]').value;
+            document.getElementById('summary_permanent_address').textContent = document.querySelector('[name="permanent_address"]').value;
+            document.getElementById('summary_temporary_address').textContent = document.querySelector('[name="temporary_address"]').value;
+            document.getElementById('summary_civil_status').textContent = document.querySelector('[name="civil_status"]').value;
+            document.getElementById('summary_living_status').textContent = document.querySelector('[name="living_status"]').value;
+            document.getElementById('summary_highest_education').textContent = document.querySelector('[name="highest_education"]').value;
+            document.getElementById('summary_occupation').textContent = document.querySelector('[name="occupation"]').value;
+            document.getElementById('summary_monthly_income').textContent = document.querySelector('[name="monthly_income"]').value;
+            document.getElementById('summary_philhealth_pin').textContent = document.querySelector('[name="philhealth_pin"]').value;
+            document.getElementById('summary_philhealth_contributor_status').textContent = document.querySelector('[name="philhealth_contributor_status"]').value;
+            // Family Composition summary
+            const famRows = document.querySelectorAll('#family-composition-rows .family-row');
+            let famTable = '<table class="table table-sm table-bordered" style="font-size:0.97em;"><thead><tr><th>Name</th><th>Date of Birth</th><th>Age</th><th>Relationship</th></tr></thead><tbody>';
+            let hasData = false;
+            famRows.forEach(row => {
+                const name = row.querySelector('[name="family_member_name[]"]').value;
+                const dob = row.querySelector('[name="family_member_birthdate[]"]').value;
+                const age = row.querySelector('[name="family_member_age[]"]').value;
+                const rel = row.querySelector('[name="relationship_to_patient[]"]').value;
+                if (name || dob || age || rel) {
+                    famTable += `<tr><td>${name}</td><td>${dob}</td><td>${age}</td><td>${rel}</td></tr>`;
+                    hasData = true;
+                }
+            });
+            famTable += '</tbody></table>';
+            document.getElementById('summary_family_composition').innerHTML = hasData ? famTable : '<em>No family members listed.</em>';
         }
     });
 });
