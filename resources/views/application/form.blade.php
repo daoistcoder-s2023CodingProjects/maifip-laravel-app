@@ -17,8 +17,8 @@
         </div>
         <!-- Step 1 -->
         <div class="form-step form-step-active position-relative" id="step-1">
-            <div class="application-form-card">
-                <h5 class="mb-3" style="color:#186737;font-weight:700;">Initial Information</h5>
+            <div class="application-form-card mb-4">
+                <h5 class="mb-3" style="color:#186737;font-weight:500;">Initial Information</h5>
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <label class="form-label">Hospital Name</label>
@@ -65,7 +65,9 @@
                         </select>
                     </div>
                 </div>
-                <h5 class="mb-3" style="color:#186737;font-weight:700;">Referral Information</h5>
+            </div>
+            <div class="application-form-card">
+                <h5 class="mb-3" style="color:#186737;font-weight:500;">Referral Information</h5>
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <label class="form-label">Name of Informant</label>
@@ -101,7 +103,7 @@
             <div class="container-fluid px-0">
                 <!-- Card 1: Patient Info -->
                 <div class="application-form-card mb-4">
-                    <h5 class="mb-3" style="color:#186737;font-weight:700;">Family Composition</h6>
+                    <h5 class="mb-3" style="color:#186737;font-weight:500;">Patient Information</h6>
                     <!-- Header Row -->
                     <div class="row g-3 mb-2">
                         <div class="col-md-4">
@@ -244,7 +246,7 @@
                 </div>
                 <!-- Card 2: Family Composition -->
                 <div class="application-form-card">
-                    <h5 class="mb-3" style="color:#186737;font-weight:700;">Family Composition</h6>
+                    <h5 class="mb-3" style="color:#186737;font-weight:500;">Family Composition</h6>
                     <!-- Header Row -->
                     <div class="row g-2 mb-1 family-header" style="font-weight:500;">
                         <div class="col-md-4">Name (Last, First, Middle)</div>
@@ -298,6 +300,10 @@
     </form>
 </div>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+.application-form, .application-form * {
+    font-family: 'Poppins', Arial, Helvetica, sans-serif !important;
+}
 .application-form {
     background: none !important;
     box-shadow: none !important;
