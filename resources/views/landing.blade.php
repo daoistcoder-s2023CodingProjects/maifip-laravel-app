@@ -58,36 +58,36 @@
 </div>
 
 <!-- Medical Services Section -->
-<div class="section">
+<div class="section medical-services-section">
     <div class="section-title">MAIFIP Medical Services</div>
     <div class="services-cards">
         <div class="card">
-            <img src="https://via.placeholder.com/80?text=Rx" alt="Drugs & Medicines">
+            <img src="/images/drugs_logo.png" alt="Drugs & Medicines">
             <div class="card-title">Drugs & Medicines</div>
             <div class="card-desc">All included in the PHI National Drug Formulary and those which qualify for drug use compliance.</div>
         </div>
         <div class="card">
-            <img src="https://via.placeholder.com/80?text=Lab" alt="Laboratory & Radiology">
+            <img src="/images/laboratory_logo.png" alt="Laboratory & Radiology">
             <div class="card-title">Laboratory & Radiology</div>
             <div class="card-desc">Laboratory tests, imaging tests, radiology tests and other diagnostic procedures needed by the patient.</div>
         </div>
         <div class="card">
-            <img src="https://via.placeholder.com/80?text=Blood" alt="Blood Screening">
+            <img src="/images/blood_screening_logo.png" alt="Blood Screening">
             <div class="card-title">Blood Screening</div>
             <div class="card-desc">Blood and other related blood screening or blood products that are needed by the patient.</div>
         </div>
         <div class="card">
-            <img src="https://via.placeholder.com/80?text=Risk" alt="Medical High Risk Cases">
+            <img src="/images/medical_cases_logo.png" alt="Medical High Risk Cases">
             <div class="card-title">Medical High Risk Cases</div>
             <div class="card-desc">All clinically indicated medical, surgical, high risk cases of obstetrics, ophthalmological, dental, implants, medical devices & supplies.</div>
         </div>
         <div class="card">
-            <img src="https://via.placeholder.com/80?text=Post" alt="Post-Hospitalization">
+            <img src="/images/hospitalization_logo.png" alt="Post-Hospitalization">
             <div class="card-title">Post-Hospitalization</div>
             <div class="card-desc">Prescribed post-hospitalization, rehabilitation services, aftercare program, appropriate mental & psychosocial support.</div>
         </div>
         <div class="card">
-            <img src="https://via.placeholder.com/80?text=Bill" alt="All Hospital Bills">
+            <img src="/images/hospital_bills_logo.png" alt="All Hospital Bills">
             <div class="card-title">All Hospital Bills</div>
             <div class="card-desc">All bills including professional fees, provided the expenses shall not exceed 50% of the approved amount of medical assistance.</div>
         </div>
@@ -96,7 +96,7 @@
 
 <!-- Footer -->
 <footer>
-    <div>M A I F I P</div>
-    <div style="font-size:0.95rem;">Medical Assistance to Indigent and Financially Incapacitated Patients</div>
+    <div style="font-size:1.5rem;font-weight:700;letter-spacing:0.2em;">M A I F I P</div>
+    <div style="font-size:1.1rem;">Medical Assistance to Indigent and Financially Incapacitated Patients</div>
 </footer>
 @endsection
