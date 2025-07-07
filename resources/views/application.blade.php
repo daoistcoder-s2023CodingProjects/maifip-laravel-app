@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'MAIFIP Application')
+
 @section('content')
-<div class="container mt-5">
-    <h2>Application Form</h2>
-    @include('application.form')
-</div>
+<link rel="stylesheet" href="/css/landing.css">
+@include('application.header')
 @endsection
