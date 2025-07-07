@@ -468,7 +468,7 @@
                 </div>
             </div>
             <div class="application-form-card mt-4">
-                <h5 class="mb-3" style="color:#186737;font-weight:600;">Data Privacy Consent & Certification</h5>
+                <h5 class="mb-3" style="color:#186737;font-weight:500;">Data Privacy Consent & Certification</h5>
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="checkbox" id="consent1">
                     <label class="form-check-label" for="consent1">
@@ -563,6 +563,9 @@ html, body, .container {
 }
 body, .application-form {
     background: #f8f9fa !important;
+}
+.accordion-button {
+    font-weight: 500 !important;
 }
 </style>
 <script>
