@@ -426,7 +426,16 @@
                     </h2>
                     <div id="collapseInitial" class="accordion-collapse collapse" aria-labelledby="headingInitial" data-bs-parent="#summaryAccordion">
                         <div class="accordion-body">
-                            <!-- Initial Information fields go here -->
+                            <div class="mb-2"><strong>Hospital Name:</strong> <span id="summary_hospital_name"></span></div>
+                            <div class="mb-2"><strong>Category:</strong> <span id="summary_category"></span></div>
+                            <div class="mb-2"><strong>Date of Interview:</strong> <span id="summary_interview_date"></span></div>
+                            <div class="mb-2"><strong>Venue of Interview:</strong> <span id="summary_interview_venue"></span></div>
+                            <div class="mb-2"><strong>Start of Interview:</strong> <span id="summary_interview_start_time"></span></div>
+                            <div class="mb-2"><strong>End of Interview:</strong> <span id="summary_interview_end_time"></span></div>
+                            <div class="mb-2"><strong>Name of Informant:</strong> <span id="summary_informant_name"></span></div>
+                            <div class="mb-2"><strong>Relation to Patient:</strong> <span id="summary_relation_to_patient"></span></div>
+                            <div class="mb-2"><strong>Contact Number:</strong> <span id="summary_informant_contact_number"></span></div>
+                            <div class="mb-2"><strong>Address:</strong> <span id="summary_informant_address"></span></div>
                         </div>
                     </div>
                 </div>
@@ -575,8 +584,28 @@ const nextBtns = document.querySelectorAll('.nextBtn');
 const backBtns = document.querySelectorAll('.backBtn');
 
 nextBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(e) {
         const next = this.getAttribute('data-next');
+        // Only validate if not going to summary step
+        const currentStep = this.closest('.form-step');
+        let valid = true;
+        // Find all required fields in the current step
+        const requiredFields = currentStep.querySelectorAll('[required]');
+        requiredFields.forEach(field => {
+            if (!field.value) {
+                field.classList.add('is-invalid');
+                valid = false;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        if (!valid) {
+            e.preventDefault();
+            // Optionally scroll to first invalid field
+            const firstInvalid = currentStep.querySelector('.is-invalid');
+            if (firstInvalid) firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
+            return;
+        }
         steps.forEach(s => s.style.display = 'none');
         document.getElementById('step-' + next).style.display = '';
         stepper.forEach(st => st.classList.remove('active', 'completed'));
@@ -587,6 +616,19 @@ nextBtns.forEach(btn => {
             }
         }
         document.querySelector('.stepper .step[data-step="' + next + '"]').classList.add('active');
+        // Populate Step 1 summary accordion with current form values when entering Step 5
+        if (next == '5') {
+            document.getElementById('summary_hospital_name').textContent = document.querySelector('[name="hospital_name"]').value;
+            document.getElementById('summary_category').textContent = document.querySelector('[name="category"]').value;
+            document.getElementById('summary_interview_date').textContent = document.querySelector('[name="interview_date"]').value;
+            document.getElementById('summary_interview_venue').textContent = document.querySelector('[name="interview_venue"]').value;
+            document.getElementById('summary_interview_start_time').textContent = document.querySelector('[name="interview_start_time"]').value;
+            document.getElementById('summary_interview_end_time').textContent = document.querySelector('[name="interview_end_time"]').value;
+            document.getElementById('summary_informant_name').textContent = document.querySelector('[name="informant_name"]').value;
+            document.getElementById('summary_relation_to_patient').textContent = document.querySelector('[name="relation_to_patient"]').value;
+            document.getElementById('summary_informant_contact_number').textContent = document.querySelector('[name="informant_contact_number"]').value;
+            document.getElementById('summary_informant_address').textContent = document.querySelector('[name="informant_address"]').value;
+        }
     });
 });
 backBtns.forEach(btn => {
