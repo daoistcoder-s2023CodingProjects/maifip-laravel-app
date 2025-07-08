@@ -653,6 +653,8 @@ nextBtns.forEach(btn => {
             }
         }
         document.querySelector('.stepper .step[data-step="' + next + '"]').classList.add('active');
+        // --- Fix: Always scroll to top of page on step change ---
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         // Populate Step 1 summary accordion with current form values when entering Step 5
         if (next == '5') {
             document.getElementById('summary_hospital_name').textContent = document.querySelector('[name="hospital_name"]').value;
