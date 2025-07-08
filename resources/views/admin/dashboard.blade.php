@@ -1,17 +1,33 @@
 @extends('layouts.app')
 @section('content')
 <div class="d-flex" style="min-height:100vh;background:#f8f9fa;">
-    <!-- Sidebar -->
-    <nav class="sidebar" style="width:240px;background:#fff;box-shadow:0 4px 24px 0 rgba(24,103,55,0.04);padding:2rem 1rem 1rem 1rem;display:flex;flex-direction:column;">
-        <div class="mb-4 text-center d-flex align-items-center justify-content-center gap-2">
-            <img src="/images/maifip_logo.png" alt="MAIFIP Logo" style="height:48px;width:48px;">
-            <div style="font-weight:700;color:#186737;font-size:1.2rem;letter-spacing:0.08em;">MAIFIP</div>
+    <!-- Side Menu -->
+    <nav class="sidebar" style="width:264px;background:#fff;box-shadow:0 4px 24px 0 rgba(24,103,55,0.04);padding:2rem 1rem 1rem 1rem;display:flex;flex-direction:column;">
+        <div class="mb-4 d-flex align-items-center" style="justify-content:flex-start; gap:0.6rem;">
+            <img src="/images/maifip_logo.png" alt="MAIFIP Logo" style="height:50px;width:50px;">
+            <div style="font-weight:600;color:#186737;font-size:1.4rem;letter-spacing:0.08em;">MAIFIP</div>
         </div>
-        <ul class="nav flex-column mb-auto">
-            <li class="nav-item mb-2"><a href="#" class="nav-link active" style="color:#186737;font-weight:600;"><i class="bi bi-grid"></i> Dashboard</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link" style="color:#222;"><i class="bi bi-file-earmark-text"></i> Applications</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link" style="color:#222;"><i class="bi bi-people"></i> User Management</a></li>
-            <li class="nav-item mb-2"><a href="#" class="nav-link" style="color:#222;"><i class="bi bi-bar-chart"></i> Reports</a></li>
+        <ul class="nav flex-column mb-auto" id="sidebarMenu">
+            <li class="nav-item mb-3">
+                <a href="#" class="nav-link sidebar-link active" data-section="dashboard">
+                    <i class="bi bi-grid"></i> <span class="sidebar-label">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item mb-3">
+                <a href="#" class="nav-link sidebar-link" data-section="applications">
+                    <i class="bi bi-file-earmark-text"></i> <span class="sidebar-label">Applications</span>
+                </a>
+            </li>
+            <li class="nav-item mb-3">
+                <a href="#" class="nav-link sidebar-link" data-section="users">
+                    <i class="bi bi-people"></i> <span class="sidebar-label">User Management</span>
+                </a>
+            </li>
+            <li class="nav-item mb-3">
+                <a href="#" class="nav-link sidebar-link" data-section="reports">
+                    <i class="bi bi-bar-chart"></i> <span class="sidebar-label">Reports</span>
+                </a>
+            </li>
         </ul>
     </nav>
     <!-- Main Content -->
@@ -134,10 +150,44 @@
 .sidebar {
     min-height: 100vh;
     border-right: 1.5px solid #e0e0e0;
+    width: 264px !important;
 }
-.sidebar .nav-link.active {
-    background: #eaf8f2;
-    border-radius: 8px;
+.sidebar .nav-link.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.06rem;
+    font-weight: 600;
+    color: #222;
+    padding: 0.94rem 1.02rem;
+    border-radius: 10.5px;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+}
+.sidebar .nav-link.sidebar-link.active {
+    background: #186737;
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    box-shadow: 0 4px 24px 0 rgba(24,103,55,0.08);
+    border-radius: 10.5px;
+}
+.sidebar .nav-link.sidebar-link.active::before {
+    display: none;
+}
+.sidebar-label {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+@media (max-width: 900px) {
+    .sidebar .nav-link.sidebar-link, .sidebar .nav-link.sidebar-link.active {
+        font-size: 0.94rem;
+        padding: 0.8rem 0.9rem;
+    }
+    .sidebar-label {
+        font-size: 0.85rem;
+    }
 }
 .card {
     border-radius: 14px;
@@ -244,6 +294,22 @@
     font-weight: 600;
     margin-left: auto;
 }
+.btn.btn-success, .btn.btn-success:focus, .btn.btn-success:active, .btn.btn-success.active {
+    background: #186737 !important;
+    border-color: #186737 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+.btn.btn-outline-success {
+    color: #186737 !important;
+    border-color: #186737 !important;
+    background: #fff !important;
+}
+.btn.btn-outline-success:hover, .btn.btn-outline-success:focus, .btn.btn-outline-success:active, .btn.btn-outline-success.active {
+    background: #186737 !important;
+    color: #fff !important;
+    border-color: #186737 !important;
+}
 </style>
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -322,6 +388,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+    });
+
+    // Sidebar JS selection logic
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            // Section switching logic placeholder
+            // You can show/hide sections here based on this.dataset.section
+        });
     });
 });
 </script>
