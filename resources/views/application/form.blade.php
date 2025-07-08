@@ -132,7 +132,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Age</label>
-                            <input type="number" class="form-control" name="patient_age" min="0">
+                            <input type="number" class="form-control" name="patient_age" min="0" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Gender</label>
@@ -147,33 +147,33 @@
                     <div class="row g-3 mb-2">
                         <div class="col-md-4">
                             <label class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" name="patient_contact_number">
+                            <input type="text" class="form-control" name="patient_contact_number" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Place of Birth</label>
-                            <input type="text" class="form-control" name="place_of_birth">
+                            <input type="text" class="form-control" name="place_of_birth" required>
                         </div>
                         <div class="col-md-4 d-flex gap-2">
                             <div style="flex:1">
                                 <label class="form-label">Nationality</label>
-                                <input type="text" class="form-control" name="nationality">
+                                <input type="text" class="form-control" name="nationality" required>
                             </div>
                             <div style="flex:1">
                                 <label class="form-label">Religion</label>
-                                <input type="text" class="form-control" name="religion">
+                                <input type="text" class="form-control" name="religion" required>
                             </div>
                         </div>
                     </div>
                     <div class="row g-3 mb-2">
                         <div class="col-md-12">
                             <label class="form-label">Permanent Address</label>
-                            <input type="text" class="form-control" name="permanent_address">
+                            <input type="text" class="form-control" name="permanent_address" required>
                         </div>
                     </div>
                     <div class="row g-3 mb-2">
                         <div class="col-md-12">
                             <label class="form-label">Temporary Address</label>
-                            <input type="text" class="form-control" name="temporary_address" id="temporary_address">
+                            <input type="text" class="form-control" name="temporary_address" id="temporary_address" required>
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -189,7 +189,7 @@
                     <div class="row g-3 mb-2">
                         <div class="col-md-4">
                             <label class="form-label">Civil Status</label>
-                            <select class="form-select" name="civil_status">
+                            <select class="form-select" name="civil_status" required>
                                 <option value="">Select</option>
                                 <option value="Single">Single</option>
                                 <option value="Married">Married</option>
@@ -199,7 +199,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Living Status</label>
-                            <select class="form-select" name="living_status">
+                            <select class="form-select" name="living_status" required>
                                 <option value="">Select</option>
                                 <option value="With Family">With Family</option>
                                 <option value="Alone">Alone</option>
@@ -208,7 +208,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Highest Educational Attainment</label>
-                            <select class="form-select" name="highest_education">
+                            <select class="form-select" name="highest_education" required>
                                 <option value="">Select</option>
                                 <option value="None">None</option>
                                 <option value="Elementary">Elementary</option>
@@ -221,11 +221,11 @@
                     <div class="row g-3 mb-2">
                         <div class="col-md-6">
                             <label class="form-label">Occupation</label>
-                            <input type="text" class="form-control" name="occupation">
+                            <input type="text" class="form-control" name="occupation" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Monthly Income</label>
-                            <input type="number" class="form-control" name="monthly_income" min="0" step="0.01">
+                            <input type="number" class="form-control" name="monthly_income" min="0" step="0.01" required>
                         </div>
                     </div>
                     <div class="row g-3 mb-2">
@@ -626,6 +626,22 @@ nextBtns.forEach(btn => {
             const firstInvalid = currentStep.querySelector('.is-invalid');
             if (firstInvalid) firstInvalid.scrollIntoView({behavior:'smooth', block:'center'});
             return;
+        }
+        // --- Custom validation: At least one family member name required on Step 2 ---
+        if (currentStep.id === 'step-2') {
+            const famNameFields = currentStep.querySelectorAll('#family-composition-rows [name="family_member_name[]"]');
+            let atLeastOneFilled = false;
+            famNameFields.forEach(field => {
+                if (field.value.trim() !== '') atLeastOneFilled = true;
+            });
+            if (!atLeastOneFilled) {
+                famNameFields.forEach(field => field.classList.add('is-invalid'));
+                e.preventDefault();
+                famNameFields[0].scrollIntoView({behavior:'smooth', block:'center'});
+                return;
+            } else {
+                famNameFields.forEach(field => field.classList.remove('is-invalid'));
+            }
         }
         steps.forEach(s => s.style.display = 'none');
         document.getElementById('step-' + next).style.display = '';
