@@ -1,3 +1,5 @@
+version: 0.2
+
 phases:
   install:
     runtime-versions:
@@ -19,4 +21,4 @@ phases:
 artifacts:
   files:
     - '**/*'
-  name: build-output.zip
+  discard-paths: no
