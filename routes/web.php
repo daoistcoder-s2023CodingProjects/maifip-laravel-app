@@ -15,5 +15,6 @@ Route::get('/admin/login', [\App\Http\Controllers\AdminController::class, 'showL
 Route::post('/admin/login', [\App\Http\Controllers\AdminController::class, 'login'])->name('admin.login.submit');
 Route::middleware([])->group(function () {
     Route::get('/admin/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/applicants', [ApplicationController::class, 'getApplicants']);
     // More admin routes can be added here
 });

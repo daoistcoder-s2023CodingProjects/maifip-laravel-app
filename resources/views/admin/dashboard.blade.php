@@ -497,5 +497,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Fetch and populate applicants table
+    const tableBody = document.getElementById('applications-table-body');
+
+    fetch('/admin/applicants?page=1')
+        .then(response => response.json())
+        .then(data => {
+            tableBody.innerHTML = '';
+            data.data.forEach(applicant => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${applicant.application_reference_number}</td>
+                    <td>${applicant.patient_first_name} ${applicant.patient_family_name}</td>
+                    <td>${applicant.category}</td>
+                    <td>${applicant.medical_service || 'N/A'}</td>
+                    <td>${applicant.total_amount || 'N/A'}</td>
+                    <td>${new Date(applicant.created_at).toLocaleDateString()}</td>
+                    <td><button class='btn btn-sm btn-outline-secondary'>...</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
 });
 </script>

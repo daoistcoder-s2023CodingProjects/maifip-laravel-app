@@ -185,4 +185,15 @@ class ApplicationController extends Controller
             ], 500);
         }
     }
+
+    public function getApplicants(Request $request)
+    {
+        // Default pagination size
+        $perPage = $request->input('per_page', 10); // Default to 10 items per page
+
+        // Fetch applicants with pagination
+        $applicants = Applicant::paginate($perPage);
+
+        return response()->json($applicants);
+    }
 }
