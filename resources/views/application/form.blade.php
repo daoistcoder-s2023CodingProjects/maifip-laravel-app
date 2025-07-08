@@ -501,13 +501,13 @@
                 <h5 class="mb-3" style="color:#186737;font-weight:500;">Data Privacy Consent & Certification</h5>
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="checkbox" id="consent1">
-                    <label class="form-check-label" for="consent1">
+                    <label class="form-check-label" for="consent1" style="font-size:0.75rem;">
                         I allow the Local Government to use my personal information to process my request for medical assistance. In accordance with the Data Privacy Act of 2012, and its implementing rules and regulations effective September 8, 2016.
                     </label>
                 </div>
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="checkbox" id="consent2">
-                    <label class="form-check-label" for="consent2">
+                    <label class="form-check-label" for="consent2" style="font-size:0.75rem;">
                         I understand that our request for assistance from the Medical Social Service is subject to the outcome of the Social Worker's interview with us. Any false information we provide can be used as a reason to invalidate our request for assistance. Due to this, we will pay all of our patient's bills here at the hospital.
                     </label>
                 </div>
