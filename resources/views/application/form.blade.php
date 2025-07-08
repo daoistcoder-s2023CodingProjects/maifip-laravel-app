@@ -830,6 +830,106 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(restoreConsentState, 10);
     });
 });
+
+// --- SUBMIT HANDLER WITH LOADING, MODAL, AND RESET ---
+document.getElementById('maifip-multistep-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    // Show loading overlay
+    document.getElementById('form-overlay').style.display = 'flex';
+    // Prepare form data
+    const form = e.target;
+    const formData = new FormData(form);
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': form.querySelector('[name="_token"]').value
+            },
+            body: formData
+        });
+        if (!response.ok) throw new Error('Submission failed');
+        const data = await response.json();
+        // Hide loading overlay
+        document.getElementById('form-overlay').style.display = 'none';
+        // Show modal with reference number from API
+        showSuccessModal(data.application_reference_number);
+    } catch (err) {
+        document.getElementById('form-overlay').style.display = 'none';
+        alert('There was an error submitting your application. Please try again.');
+    }
+});
+
+function showSuccessModal(ref) {
+    // Remove any existing modal
+    const oldModal = document.getElementById('maifip-success-modal');
+    if (oldModal) oldModal.remove();
+    // Modal HTML
+    const modal = document.createElement('div');
+    modal.id = 'maifip-success-modal';
+    modal.innerHTML = `
+    <div class="maifip-modal-overlay"></div>
+    <div class="maifip-modal-card">
+        <div class="application-form-card" style="box-shadow:none;margin-top:0;margin-bottom:0;padding:2rem 1.5rem 1.5rem 1.5rem;">
+            <div class="maifip-modal-header">
+                <img src="/images/maifip_logo.png" alt="MAIFIP Logo" style="height: 50px; width: 50px; margin-right: 1rem;">
+                <div class="maifip-brand">
+                    <div class="maifip-title">MAIFIP</div>
+                    <div class="maifip-modal-sub">Medical Assistance to Indigent and Financially Incapacitated Patients</div>
+                </div>
+            </div>
+            <div class="maifip-modal-body">
+                <div class="maifip-modal-success">Medical Assistance Application Submitted!</div>
+                <div class="maifip-modal-desc">We are currently reviewing your application<br>and will notify you via SMS of the status<br>within 24hrs.<br><br>Your application reference number is <span class="maifip-modal-ref">${ref}</span>.<br>Please keep this number for all future inquiries regarding your application. Thank you!</div>
+            </div>
+            <button class="btn btn-success btn-lg w-100 mt-3" id="maifip-modal-close">Close</button>
+        </div>
+    </div>
+    `;
+    document.body.appendChild(modal);
+    // Clear all form data and localStorage for consents
+    document.getElementById('maifip-multistep-form').reset();
+    localStorage.removeItem('maifip_consent1');
+    localStorage.removeItem('maifip_consent2');
+    // Reset to step 1
+    steps.forEach(s => s.style.display = 'none');
+    document.getElementById('step-1').style.display = '';
+    stepper.forEach(st => st.classList.remove('active', 'completed'));
+    document.querySelector('.stepper .step[data-step="1"]').classList.add('active');
+    // Modal close handler
+    document.getElementById('maifip-modal-close').onclick = function() {
+        modal.remove();
+        window.location.reload();
+    };
+}
+// --- MODAL STYLES ---
+const modalStyle = document.createElement('style');
+modalStyle.innerHTML = `
+.maifip-modal-overlay {
+    position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+    background: linear-gradient(135deg,#eaf8f2 0%,#f8f9fa 100%); opacity: 0.92;
+    z-index: 2000;
+}
+.maifip-modal-card {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: #fff; border-radius: 18px; box-shadow: 0 8px 32px 0 rgba(24,103,55,0.10);
+    padding: 0.5rem 0.5rem 0 0.5rem; min-width: 150px; max-width: 76vw; width: 35vw; z-index: 2001;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: left;
+}
+.maifip-modal-header { display: flex; align-items: center; margin-bottom: 2.5rem; }
+.maifip-modal-title { font-weight: 700; color: #186737; font-size: 1.25rem; letter-spacing: 0.12em; }
+.maifip-modal-sub { font-size: 0.8em; color: #222; font-weight: 600; }
+.maifip-modal-success { color: #186737; font-size: 1.15rem; font-weight: 600; margin-bottom: 1.1rem; margin-left: 0.5rem; }
+.maifip-modal-desc { color: #222; font-size: 1.15rem; text-align: left !important; margin-bottom: 0.7rem;  margin-left: 0.5rem; }
+.maifip-modal-ref { color: #186737; font-weight: 600; letter-spacing: 0.04em; }
+@media (max-width: 600px) {
+  .maifip-modal-card { padding: 1.2rem 0.5rem; min-width: 0; }
+  .maifip-modal-header img { height: 38px !important; width: 38px !important; }
+  .maifip-modal-title { font-size: 1.05rem; }
+}
+`;
+document.head.appendChild(modalStyle);
 </script>
 <!-- Bootstrap 5 CSS & JS for Accordion functionality -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

@@ -54,33 +54,26 @@ return new class extends Migration
             $table->json('family_composition')->nullable();
 
             // === FORM 3: MSWD Classification ===
-            $table->string('main_classification')->nullable();
-            $table->string('sub_classification')->nullable();
-            $table->string('marginalized_sector_member')->nullable();
-            $table->string('mss_class')->nullable();
-
+            $table->string('mswd_main_classification')->nullable();
+            $table->string('mswd_sub_classification')->nullable();
+            $table->string('mswd_marginalized_sector')->nullable();
+            $table->string('mswd_mss_class')->nullable();
             // --- Monthly Expense Breakdown ---
-            $table->decimal('expense_food', 12, 2)->nullable();
-            $table->decimal('expense_education', 12, 2)->nullable();
-            $table->decimal('expense_clothing', 12, 2)->nullable();
-            $table->decimal('expense_transportation', 12, 2)->nullable();
-            $table->decimal('expense_househelp', 12, 2)->nullable();
-            $table->decimal('expense_medical', 12, 2)->nullable();
-            $table->decimal('expense_insurance_premium', 12, 2)->nullable();
-            $table->decimal('expense_electric', 12, 2)->nullable();
-            $table->decimal('expense_water', 12, 2)->nullable();
-            $table->decimal('expense_gas_fuel', 12, 2)->nullable();
-            $table->decimal('total_monthly_expenses', 12, 2)->nullable();
+            $table->json('monthly_expenses')->nullable();
 
             // === FORM 4: Medical Data ===
             $table->text('admitting_diagnosis')->nullable();
             $table->text('final_diagnosis')->nullable();
-            $table->text('problem_duration')->nullable();
+            $table->text('duration_of_problems')->nullable();
             $table->text('previous_treatment')->nullable();
-            $table->text('treatment_plan')->nullable();
-            $table->text('health_accessibility_issue')->nullable();
-            $table->text('medical_assessment')->nullable();
+            $table->text('present_treatment_plan')->nullable();
+            $table->text('health_accessibility_problem')->nullable();
+            $table->text('assessment_findings')->nullable();
             $table->text('recommended_interventions')->nullable();
+
+            // Required Flags and Application Details
+            $table->boolean('is_approved')->default(false);
+            $table->string('application_reference_number')->nullable();
 
             $table->timestamps();
         });
