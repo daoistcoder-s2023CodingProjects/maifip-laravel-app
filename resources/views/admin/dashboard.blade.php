@@ -38,11 +38,19 @@
                     <div class="dashboard-title" style="font-size:1.5rem;font-weight:700;color:#186737;">Dashboard</div>
                     <div style="font-size:1rem;color:#186737;"><i class="bi bi-grid"></i> Dashboard</div>
                 </div>
-                <div class="d-flex align-items-center gap-3">
-                    <a href="#" class="icon-btn"><i class="bi bi-search"></i></a>
-                    <a href="#" class="icon-btn"><i class="bi bi-envelope"></i></a>
-                    <a href="#" class="icon-btn"><i class="bi bi-bell"></i></a>
-                    <a href="#" class="icon-btn"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="rounded-circle" style="width:36px;height:36px;object-fit:cover;border:2px solid #e0e0e0;"></a>
+                <div class="d-flex align-items-center gap-1">
+                    <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
+                        <i class="bi bi-search" style="color:#186737;font-size:1.2rem;"></i>
+                    </a>
+                    <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
+                        <i class="bi bi-envelope" style="color:#186737;font-size:1.2rem;"></i>
+                    </a>
+                    <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
+                        <i class="bi bi-bell" style="color:#186737;font-size:1.2rem;"></i>
+                    </a>
+                    <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+                    </a>
                 </div>
             </div>
             <div class="card dashboard-summary-card mb-4 p-4" style="border:1px solid #e0e0e0;background:#fff;">
@@ -150,10 +158,18 @@
                     <div style="font-size:1rem;color:#186737;"><i class="bi bi-grid"></i> Dashboard <span style="color:#b0b0b0;">/ Application List</span></div>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <a href="#" class="icon-btn icon-circle"><i class="bi bi-search"></i></a>
-                    <a href="#" class="icon-btn icon-circle"><i class="bi bi-envelope"></i></a>
-                    <a href="#" class="icon-btn icon-circle"><i class="bi bi-bell"></i></a>
-                    <a href="#" class="icon-btn icon-circle"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="rounded-circle" style="width:36px;height:36px;object-fit:cover;border:2px solid #e0e0e0;"></a>
+                    <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
+                        <i class="bi bi-search" style="color:#186737;font-size:1.2rem;"></i>
+                    </a>
+                    <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
+                        <i class="bi bi-envelope" style="color:#186737;font-size:1.2rem;"></i>
+                    </a>
+                    <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
+                        <i class="bi bi-bell" style="color:#186737;font-size:1.2rem;"></i>
+                    </a>
+                    <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+                    </a>
                 </div>
             </div>
             <div class="card p-4 mb-4" style="border:1px solid #e0e0e0;background:#fff;">
@@ -347,7 +363,9 @@
     transition: box-shadow 0.2s;
 }
 .service-card:hover {
-    box-shadow: 0 8px 32px 0 rgba(24,103,55,0.08);
+    transform: translateY(-5px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 32px 0 rgba(24,103,55,0.15);
 }
 .service-icon {
     border-radius: 50%;
@@ -398,6 +416,26 @@
     background: #186737 !important;
     color: #fff !important;
     border-color: #186737 !important;
+}
+.btn:hover {
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+}
+
+/* Update hover effect for top-right user icons */
+.icon-btn.icon-circle:hover {
+    background-color: #186737 !important;
+    color: #fff !important;
+    border-color: #14582b !important;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* Ensure the actual icon inside the circle turns white */
+.icon-btn.icon-circle i {
+    transition: color 0.3s;
+}
+.icon-btn.icon-circle:hover i {
+    color: #fff !important;
 }
 </style>
 <!-- Chart.js CDN -->
