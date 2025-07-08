@@ -298,7 +298,7 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Main Classification</label>
-                        <select class="form-select" name="mswd_main_classification">
+                        <select class="form-select" name="mswd_main_classification" required>
                             <option value="">Select</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
@@ -308,7 +308,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Sub Classification for Non PhilHealth Coverage</label>
-                        <select class="form-select" name="mswd_sub_classification">
+                        <select class="form-select" name="mswd_sub_classification" required>
                             <option value="">Select</option>
                             <option value="PWD">PWD</option>
                             <option value="Senior Citizen">Senior Citizen</option>
@@ -318,7 +318,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Membership to Marginalized Sector</label>
-                        <select class="form-select" name="mswd_marginalized_sector">
+                        <select class="form-select" name="mswd_marginalized_sector" required>
                             <option value="">Select</option>
                             <option value="4Ps">4Ps</option>
                             <option value="IP">IP</option>
@@ -328,7 +328,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">MSS Class</label>
-                        <select class="form-select" name="mswd_mss_class">
+                        <select class="form-select" name="mswd_mss_class" required>
                             <option value="">Select</option>
                             <option value="Class 1">Class 1</option>
                             <option value="Class 2">Class 2</option>
@@ -702,6 +702,15 @@ nextBtns.forEach(btn => {
             });
             famTable += '</tbody></table>';
             document.getElementById('summary_family_composition').innerHTML = hasData ? famTable : '<em>No family members listed.</em>';
+            // MSWD Classification summary (Accordion 3)
+            let mswdSummary = '';
+            mswdSummary += '<div class="mb-2"><strong>Main Classification:</strong> ' + (document.querySelector('[name="mswd_main_classification"]').value || '-') + '</div>';
+            mswdSummary += '<div class="mb-2"><strong>Sub Classification:</strong> ' + (document.querySelector('[name="mswd_sub_classification"]').value || '-') + '</div>';
+            mswdSummary += '<div class="mb-2"><strong>Marginalized Sector:</strong> ' + (document.querySelector('[name="mswd_marginalized_sector"]').value || '-') + '</div>';
+            mswdSummary += '<div class="mb-2"><strong>MSS Class:</strong> ' + (document.querySelector('[name="mswd_mss_class"]').value || '-') + '</div>';
+            // Monthly Expenses total only
+            mswdSummary += '<div class="mb-2"><strong>Monthly Expenses (Total):</strong> <span id="summary_monthly_expenses_total">' + (document.getElementById('monthly-expenses-total').textContent || '0.00') + '</span></div>';
+            document.querySelector('#collapseMSWD .accordion-body').innerHTML = mswdSummary;
         }
     });
 });
