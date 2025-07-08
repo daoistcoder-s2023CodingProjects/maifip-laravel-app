@@ -18,10 +18,10 @@ class ApplicationController extends Controller
             'Community Health Clinic',
         ];
         $categories = [
-            'Indigent',
-            'Financially Incapacitated',
-            'Catastrophic Illness',
-            'Expensive Therapy',
+            'In-Patient',
+            'Out-Patient',
+            'Walk-In',
+            'Others',
         ];
         $relations = [
             'Parent',

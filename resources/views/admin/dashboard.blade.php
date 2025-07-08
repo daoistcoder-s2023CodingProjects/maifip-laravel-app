@@ -190,12 +190,20 @@
                         <label class="form-label mb-1" style="font-weight:500;">Category</label>
                         <select class="form-select">
                             <option>Select</option>
+                            <option value="In-Patient">In-Patient</option>
+                            <option value="Out-Patient">Out-Patient</option>
+                            <option value="Walk-In">Walk-In</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label mb-1" style="font-weight:500;">Medical Services</label>
                         <select class="form-select">
                             <option>Select</option>
+                            <option value="Laboratory">Laboratory</option>
+                            <option value="Operation">Operation</option>
+                            <option value="Medication">Medication</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -548,9 +556,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.innerHTML = `
                     <td>${applicant.application_reference_number}</td>
                     <td>${applicant.patient_first_name} ${applicant.patient_family_name}</td>
-                    <td>${applicant.category}</td>
-                    <td>${applicant.medical_service || 'N/A'}</td>
-                    <td>${applicant.total_amount || 'N/A'}</td>
+                    <td>${applicant.category || '(not set)'}</td>
+                    <td>${applicant.medical_service || '(not set)'}</td>
+                    <td>${applicant.total_amount || '(not set)'}</td>
                     <td>${new Date(applicant.created_at).toLocaleDateString()}</td>
                     <td><button class='btn btn-sm btn-outline-secondary'>...</button></td>
                 `;
