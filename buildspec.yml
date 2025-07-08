@@ -1,0 +1,25 @@
+phases:
+  install:
+    runtime-versions:
+      php: 8.4
+    commands:
+      - sudo apt-get update -y
+      - sudo apt-get install -y libpq-dev libzip-dev php-pgsql
+      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+  pre_build:
+    commands:
+      - composer install
+      - npm install
+
+  build:
+    commands:
+      - npm run build
+
+artifacts:
+  files:
+    - '**/*'
+  name: build-output.zip
+proxy:
+  upload-artifacts: yes
+  logs: yes
