@@ -65,7 +65,7 @@ class ApplicationController extends Controller
     public function submit(Request $request)
     {
         try {
-            \Log::debug('Application submission request data:', $request->all());   
+            // \Log::debug('Application submission request data:', $request->all());   
             
             $validated = $request->validate([
                 'hospital_name' => 'nullable|string',
@@ -131,7 +131,7 @@ class ApplicationController extends Controller
             $applicant = new Applicant();
             $applicant->applicant_id = \Illuminate\Support\Str::uuid();
             $applicant->application_reference_number = $reference;
-            $applicant->is_approved = false;
+            $applicant->is_approved = null;
             // Fill simple fields
             $fields = [
                 'hospital_name', 'category', 'interview_date', 'interview_venue', 'interview_start_time', 'interview_end_time',
@@ -196,4 +196,95 @@ class ApplicationController extends Controller
 
         return response()->json($applicants);
     }
+
+    // Get applicant details by ID
+    public function getApplicantById($id)
+    {
+        $applicant = Applicant::find($id);
+        if (!$applicant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Applicant not found.'
+            ], 404);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $applicant
+        ]);
+    }
+
+    // Set applicant status (approved/declined) using switch
+    public function setApplicantStatus(Request $request, $id)
+    {
+        $applicant = Applicant::find($id);
+        if (!$applicant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Applicant not found.'
+            ], 404);
+        }
+        $status = $request->input('application_status');
+        switch ($status) {
+            case 'approved':
+                $applicant->is_approved = true;
+                break;
+            case 'declined':
+                $applicant->is_approved = false;
+                break;
+            default:
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid application_status value.'
+                ], 400);
+        }
+        $applicant->save();
+        return response()->json([
+            'success' => true,
+            'message' => 'Application status updated.',
+            'is_approved' => $applicant->is_approved
+        ]);
+    }
+
+    // Update applicant details (partial update)
+    public function updateApplicantDetails(Request $request, $id)
+    {
+        $applicant = Applicant::find($id);
+        if (!$applicant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Applicant not found.'
+            ], 404);
+        }
+        // Only update fields present in request
+        $fields = [
+            'hospital_name', 'category', 'interview_date', 'interview_venue', 'interview_start_time', 'interview_end_time',
+            'informant_name', 'informant_address', 'relation_to_patient', 'informant_contact_number',
+            'patient_family_name', 'patient_first_name', 'patient_middle_name', 'patient_extension', 'patient_birthdate',
+            'patient_age', 'patient_gender', 'patient_contact_number', 'place_of_birth', 'nationality', 'religion',
+            'permanent_address', 'temporary_address', 'civil_status', 'living_status', 'highest_education',
+            'occupation', 'monthly_income', 'philhealth_pin', 'philhealth_contributor_status',
+            'mswd_main_classification', 'mswd_sub_classification', 'mswd_marginalized_sector', 'mswd_mss_class',
+            'admitting_diagnosis', 'final_diagnosis', 'duration_of_problems', 'previous_treatment',
+            'present_treatment_plan', 'health_accessibility_problem', 'assessment_findings', 'recommended_interventions'
+        ];
+        foreach ($fields as $field) {
+            if ($request->has($field)) {
+                $applicant->$field = $request->input($field);
+            }
+        }
+        // Optionally update family_composition and monthly_expenses if present
+        if ($request->has('family_composition')) {
+            $applicant->family_composition = json_encode($request->input('family_composition'));
+        }
+        if ($request->has('monthly_expenses')) {
+            $applicant->monthly_expenses = json_encode($request->input('monthly_expenses'));
+        }
+        $applicant->save();
+        return response()->json([
+            'success' => true,
+            'message' => 'Applicant details updated.',
+            'data' => $applicant
+        ]);
+    }
+    
 }

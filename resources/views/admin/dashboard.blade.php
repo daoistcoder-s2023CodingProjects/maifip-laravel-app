@@ -157,7 +157,7 @@
                     <div class="dashboard-title" style="font-size:1.5rem;font-weight:700;color:#186737;">Applications</div>
                     <div style="font-size:1rem;color:#186737;"><i class="bi bi-grid"></i> Dashboard <span style="color:#b0b0b0;">/ Application List</span></div>
                 </div>
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-1">
                     <a href="#" class="icon-btn icon-circle" style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;border:2px solid #186737;background-color:#fff;">
                         <i class="bi bi-search" style="color:#186737;font-size:1.2rem;"></i>
                     </a>
@@ -224,7 +224,7 @@
                 <div class="table-responsive">
                     <table class="table table-borderless align-middle">
                         <thead>
-                            <tr style="color:#186737;font-weight:700;">
+                            <tr class="table-header-green">
                                 <th>Reference No.</th>
                                 <th>Patient Name</th>
                                 <th>Category</th>
@@ -444,6 +444,32 @@
 }
 .icon-btn.icon-circle:hover i {
     color: #fff !important;
+}
+.table-header-green th {
+    color: #186737 !important;
+    font-weight: 700;
+}
+.pagination .page-item.active .page-link {
+    background-color: #186737 !important;
+    border-color: #186737 !important;
+    color: #fff !important;
+    font-weight: 700;
+}
+.pagination .page-link {
+    color: #186737 !important;
+    border-radius: 8px !important;
+    border: 1.5px solid #e0e0e0 !important;
+    transition: background-color 0.2s, color 0.2s;
+}
+.pagination .page-item:not(.active) .page-link:hover {
+    background-color: #eaf8f2 !important;
+    color: #186737 !important;
+}
+.pagination .page-item {
+    margin-right: 10px !important;
+}
+.pagination .page-item:last-child {
+    margin-right: 0 !important;
 }
 </style>
 <!-- Chart.js CDN -->
