@@ -10,18 +10,34 @@ class ApplicationController extends Controller
 {
     public function showForm()
     {
-        // Dummy data for dropdowns
         $hospitals = [
-            'General Hospital',
-            'City Medical Center',
-            'Provincial Hospital',
-            'Community Health Clinic',
+            'Bicol Access Health Centrum',
+            'Bicol Medical Center',
+            'Bicol Region General Hospital and Geriatric Medical Center',
+            'Caramoan Municipal Hospital',
+            'CHMSC Lourdes Hospital',
+            'Dr. Nilo O. Roa Memorial Foundation Hospital Inc.',
+            'Libmanan District Hospital',
+            'Naga City General Hospital',
+            'Ocampo Municipal Hospital',
+            'Our Lady Mediatrix Hospital',
+            'Our Lady of Lourdes Infirmary',
+            'Ragay District Hospital',
+            'Sagnay Infirmary',
+            'San Jose Medicare Community Hospital',
         ];
         $categories = [
             'In-Patient',
             'Out-Patient',
             'Walk-In',
-            'Others',
+            'ER',
+            'Old Case',
+            'New Case',
+            'Forwarded',
+            'Closed',
+            'Service',
+            'Semi-Private',
+            'Private',
         ];
         $relations = [
             'Parent',
@@ -32,19 +48,68 @@ class ApplicationController extends Controller
             'Friend',
             'Other',
         ];
-        // Office hours 10:00 AM to 5:00 PM, 30 min interval
+        $maritalStatuses = [
+            'Single',
+            'Married',
+            'Common-Law',
+            'Widowed',
+            'Separated'
+        ];
+        $livingStatus = [
+            'Owned',
+            'Shared',
+            'Rent',
+            'Homeless',
+            'Institutionalized',
+        ];
+        $educations = [
+            'Primary',
+            'Secondary',
+            'Vocational',
+            'Tertiary',
+            'Post Graduate',
+            'No Educational Attainment',
+        ];
+        
+        $mswdMainClass = [
+            'Financially Capable / Capacitated (5,074 & up)',
+            'Financially Incapable / Incapacitated (2307-5073)',
+            'Indigent (2,306 & below)',
+        ];
+        $mswdSubClass = [
+            'C1',
+            'C2',
+            'C3',
+        ];
+        $marginalizedSector = [
+            'Artisanal Fishfolk',
+            'Farmer and Landless Rural Worker',
+            'Urban Poor',
+            'Indegenous Peoples',
+            'Senior Citizen',
+            'Formal Labor and Migrant Workers',
+            'Workers in Informal Sector',
+            'PWD',
+            'Victims of Disaster and Calamity',
+        ];
+        $mssClass = [
+            'Charity Patient',
+            'Private Patient',
+            'Subsidized Patient',
+        ];
+        
         $timeSelections = [];
         $start = strtotime('10:00');
         $end = strtotime('17:00');
         for ($t = $start; $t <= $end; $t += 1800) {
             $display = date('h:i A', $t);
-            $value = date('H:i', $t); // military format
+            $value = date('H:i', $t);
             $timeSelections[] = [
                 'label' => $display,
                 'value' => $value
             ];
         }
-        return view('application', compact('hospitals', 'categories', 'relations', 'timeSelections'));
+        return view('application', compact('hospitals', 'categories', 'relations', 'maritalStatuses', 'livingStatus', 'educations', 'mswdMainClass', 'mswdSubClass', 'marginalizedSector', 'mssClass', 'timeSelections'));
     }
 
     public function view($id)

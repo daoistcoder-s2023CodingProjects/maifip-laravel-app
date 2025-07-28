@@ -1,3 +1,5 @@
+@include('admin.partials.application-details-modal')
+<!-- JS for modal moved to bottom for better organization -->
 @extends('layouts.app')
 @section('content')
 <div class="d-flex" style="min-height:100vh;background:#f8f9fa;">
@@ -229,6 +231,8 @@
 </style>
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Bootstrap 5 JS CDN (required for modal JS API) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('applicationsChart');
@@ -334,6 +338,56 @@ document.addEventListener('DOMContentLoaded', function() {
             tableBody.innerHTML = '';
             data.data.forEach(applicant => {
                 const row = document.createElement('tr');
+                // Prepare data-app JSON for modal
+                const appData = {
+                    hospital_name: applicant.hospital_name,
+                    category: applicant.category,
+                    interview_date: applicant.interview_date,
+                    interview_venue: applicant.interview_venue,
+                    interview_start_time: applicant.interview_start_time,
+                    interview_end_time: applicant.interview_end_time,
+                    informant_name: applicant.informant_name,
+                    relation_to_patient: applicant.relation_to_patient,
+                    informant_contact_number: applicant.informant_contact_number,
+                    informant_address: applicant.informant_address,
+                    patient_family_name: applicant.patient_family_name,
+                    patient_first_name: applicant.patient_first_name,
+                    patient_middle_name: applicant.patient_middle_name,
+                    patient_extension: applicant.patient_extension,
+                    patient_birthdate: applicant.patient_birthdate,
+                    patient_age: applicant.patient_age,
+                    patient_gender: applicant.patient_gender,
+                    patient_contact_number: applicant.patient_contact_number,
+                    place_of_birth: applicant.place_of_birth,
+                    nationality: applicant.nationality,
+                    religion: applicant.religion,
+                    permanent_address: applicant.permanent_address,
+                    temporary_address: applicant.temporary_address,
+                    civil_status: applicant.civil_status,
+                    living_status: applicant.living_status,
+                    highest_education: applicant.highest_education,
+                    occupation: applicant.occupation,
+                    monthly_income: applicant.monthly_income,
+                    philhealth_pin: applicant.philhealth_pin,
+                    philhealth_contributor_status: applicant.philhealth_contributor_status,
+                    // MSWD Classification
+                    mswd_main_classification: applicant.mswd_main_classification,
+                    mswd_sub_classification: applicant.mswd_sub_classification,
+                    mswd_marginalized_sector: applicant.mswd_marginalized_sector,
+                    mswd_mss_class: applicant.mswd_mss_class,
+                    monthly_expenses: applicant.monthly_expenses,
+                    // Medical Data
+                    admitting_diagnosis: applicant.admitting_diagnosis,
+                    final_diagnosis: applicant.final_diagnosis,
+                    duration_of_problems: applicant.duration_of_problems,
+                    previous_treatment: applicant.previous_treatment,
+                    present_treatment_plan: applicant.present_treatment_plan,
+                    health_accessibility_problem: applicant.health_accessibility_problem,
+                    assessment_findings: applicant.assessment_findings,
+                    recommended_interventions: applicant.recommended_interventions,
+                    // Family Composition (if available)
+                    family_composition: applicant.family_composition
+                };
                 row.innerHTML = `
                     <td>${applicant.application_reference_number}</td>
                     <td>${applicant.patient_first_name} ${applicant.patient_family_name}</td>
@@ -341,10 +395,118 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>${applicant.medical_service || '(not set)'}</td>
                     <td>${applicant.total_amount || '(not set)'}</td>
                     <td>${new Date(applicant.created_at).toLocaleDateString()}</td>
-                    <td><button class='btn btn-sm btn-outline-secondary'>...</button></td>
+                    <td>
+                        <button class='btn btn-sm btn-outline-secondary' data-bs-toggle="modal" data-bs-target="#applicationDetailsModal" data-app='${JSON.stringify(appData)}' onclick="showApplicationDetailsModal(this)">...</button>
+                    </td>
                 `;
                 tableBody.appendChild(row);
             });
         });
 });
+    // Example JS function to populate modal (replace with your AJAX/data logic)
+    window.showApplicationDetailsModal = function(btn) {
+        console.log('showApplicationDetailsModal triggered', btn);
+        // You would fetch the full application data here, for now use data-app attribute
+        const app = btn.getAttribute('data-app');
+        if (!app) return;
+        let data;
+        try { data = JSON.parse(app); } catch { return; }
+        // Populate all modal fields (match summary accordion)
+        document.getElementById('modal_summary_hospital_name').textContent = data.hospital_name || '';
+        document.getElementById('modal_summary_category').textContent = data.category || '';
+        document.getElementById('modal_summary_interview_date').textContent = data.interview_date || '';
+        document.getElementById('modal_summary_interview_venue').textContent = data.interview_venue || '';
+        document.getElementById('modal_summary_interview_start_time').textContent = data.interview_start_time || '';
+        document.getElementById('modal_summary_interview_end_time').textContent = data.interview_end_time || '';
+        document.getElementById('modal_summary_informant_name').textContent = data.informant_name || '';
+        document.getElementById('modal_summary_relation_to_patient').textContent = data.relation_to_patient || '';
+        document.getElementById('modal_summary_informant_contact_number').textContent = data.informant_contact_number || '';
+        document.getElementById('modal_summary_informant_address').textContent = data.informant_address || '';
+        // Patient Info
+        document.getElementById('modal_summary_patient_family_name').textContent = data.patient_family_name || '';
+        document.getElementById('modal_summary_patient_first_name').textContent = data.patient_first_name || '';
+        document.getElementById('modal_summary_patient_middle_name').textContent = data.patient_middle_name || '';
+        document.getElementById('modal_summary_patient_extension').textContent = data.patient_extension || '';
+        document.getElementById('modal_summary_patient_birthdate').textContent = data.patient_birthdate || '';
+        document.getElementById('modal_summary_patient_age').textContent = data.patient_age || '';
+        document.getElementById('modal_summary_patient_gender').textContent = data.patient_gender || '';
+        document.getElementById('modal_summary_patient_contact_number').textContent = data.patient_contact_number || '';
+        document.getElementById('modal_summary_place_of_birth').textContent = data.place_of_birth || '';
+        document.getElementById('modal_summary_nationality').textContent = data.nationality || '';
+        document.getElementById('modal_summary_religion').textContent = data.religion || '';
+        document.getElementById('modal_summary_permanent_address').textContent = data.permanent_address || '';
+        document.getElementById('modal_summary_temporary_address').textContent = data.temporary_address || '';
+        document.getElementById('modal_summary_civil_status').textContent = data.civil_status || '';
+        document.getElementById('modal_summary_living_status').textContent = data.living_status || '';
+        document.getElementById('modal_summary_highest_education').textContent = data.highest_education || '';
+        document.getElementById('modal_summary_occupation').textContent = data.occupation || '';
+        document.getElementById('modal_summary_monthly_income').textContent = data.monthly_income || '';
+        document.getElementById('modal_summary_philhealth_pin').textContent = data.philhealth_pin || '';
+        document.getElementById('modal_summary_philhealth_contributor_status').textContent = data.philhealth_contributor_status || '';
+        // Family Composition (support stringified JSON or array)
+        let famComp = data.family_composition;
+        if (typeof famComp === 'string') {
+            try { famComp = JSON.parse(famComp); } catch { famComp = []; }
+        }
+        if (famComp && Array.isArray(famComp)) {
+            let famTable = '<table class="table table-sm table-bordered" style="font-size:0.97em;"><thead><tr><th>Name</th><th>Date of Birth</th><th>Age</th><th>Relationship</th></tr></thead><tbody>';
+            let hasData = false;
+            famComp.forEach(row => {
+                if (row.name || row.birthdate || row.age || row.relationship) {
+                    famTable += `<tr><td>${row.name||''}</td><td>${row.birthdate||''}</td><td>${row.age||''}</td><td>${row.relationship||''}</td></tr>`;
+                    hasData = true;
+                }
+            });
+            famTable += '</tbody></table>';
+            document.getElementById('modal_summary_family_composition').innerHTML = hasData ? famTable : '<em>No family members listed.</em>';
+        } else {
+            document.getElementById('modal_summary_family_composition').innerHTML = '<em>No family members listed.</em>';
+        }
+
+        // MSWD Classification (populate spans directly)
+
+        document.getElementById('modal_summary_mswd_main_classification').textContent = data.mswd_main_classification || '-';
+        document.getElementById('modal_summary_mswd_sub_classification').textContent = data.mswd_sub_classification || '-';
+        document.getElementById('modal_summary_mswd_marginalized_sector').textContent = data.mswd_marginalized_sector || '-';
+        document.getElementById('modal_summary_mswd_mss_class').textContent = data.mswd_mss_class || '-';
+
+        // Monthly Expenses breakdown table
+        let expenses = data.monthly_expenses;
+        if (typeof expenses === 'string') {
+            try { expenses = JSON.parse(expenses); } catch { expenses = {}; }
+        }
+        let expenseRows = '';
+        let total = 0;
+        if (expenses && typeof expenses === 'object') {
+            Object.entries(expenses).forEach(([particular, amount]) => {
+                if (amount && !isNaN(amount)) {
+                    total += parseFloat(amount);
+                    expenseRows += `<tr><td>${particular}</td><td class="text-end">₱ ${parseFloat(amount).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td></tr>`;
+                }
+            });
+        }
+        let expenseTable = `<table class="table table-sm table-bordered" style="font-size:0.97em; margin-bottom:0;">
+            <thead><tr><th>Particulars</th><th class="text-end">Estimated Monthly Cost</th></tr></thead>
+            <tbody>${expenseRows}</tbody>
+            <tfoot><tr><th>Total</th><th class="text-end">₱ ${total.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</th></tr></tfoot>
+        </table>`;
+        document.getElementById('modal_summary_monthly_expenses').innerHTML = expenseRows ? expenseTable : '<em>No monthly expenses listed.</em>';
+
+        // Medical Data (populate spans directly)
+        document.getElementById('modal_summary_admitting_diagnosis').textContent = data.admitting_diagnosis || '-';
+        document.getElementById('modal_summary_final_diagnosis').textContent = data.final_diagnosis || '-';
+        document.getElementById('modal_summary_duration_of_problems').textContent = data.duration_of_problems || '-';
+        document.getElementById('modal_summary_previous_treatment').textContent = data.previous_treatment || '-';
+        document.getElementById('modal_summary_present_treatment_plan').textContent = data.present_treatment_plan || '-';
+        document.getElementById('modal_summary_health_accessibility_problem').textContent = data.health_accessibility_problem || '-';
+        document.getElementById('modal_summary_assessment_findings').textContent = data.assessment_findings || '-';
+        document.getElementById('modal_summary_recommended_interventions').textContent = data.recommended_interventions || '-';
+
+        // Programmatically show the modal using Bootstrap 5 JS API
+        var modalEl = document.getElementById('applicationDetailsModal');
+        if (modalEl) {
+            var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+        }
+    }
 </script>
