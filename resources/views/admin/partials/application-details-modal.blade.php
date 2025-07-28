@@ -2,11 +2,44 @@
 <div class="modal fade" id="applicationDetailsModal" tabindex="-1" aria-labelledby="applicationDetailsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="applicationDetailsModalLabel" style="color:#186737;font-weight:700;">Application Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="maifip-modal-header" style="width:100%; justify-content:center; background:transparent; border:none; box-shadow:none; margin-bottom:2.5rem; padding-top:2.2rem;">
+        <img src="/images/maifip_logo.png" alt="MAIFIP Logo" style="height:54px;width:54px;margin-right:1.2rem;">
+        <div>
+          <div class="maifip-modal-title">M A I F I P</div>
+          <div class="maifip-modal-sub">Medical Assistance to Indigent and Financially Incapacitated Patients</div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:2.2rem;top:2.2rem;"></button>
       </div>
-      <div class="modal-body">
+      <style>
+      .maifip-modal-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        position: relative;
+        padding-top: 2.2rem;
+      }
+      .maifip-modal-title {
+        font-weight: 700;
+        color: #186737;
+        font-size: 1.25rem;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.1rem;
+      }
+      .maifip-modal-sub {
+        font-size: 0.98rem;
+        color: #222;
+        font-weight: 600;
+        margin-top: 0.1rem;
+      }
+      @media (max-width: 600px) {
+        .maifip-modal-header img { height: 38px !important; width: 38px !important; }
+        .maifip-modal-title { font-size: 1.05rem; }
+      }
+      </style>
+      <div class="modal-body" style="background: #f8f9fa !important; padding: 2rem 2rem 1.5rem 2rem;">
         <div class="accordion" id="summaryAccordion">
           <div class="accordion-item mb-3">
             <h2 class="accordion-header" id="headingInitial">
@@ -14,7 +47,7 @@
                 Initial Information
               </button>
             </h2>
-            <div id="collapseInitial" class="accordion-collapse collapse show" aria-labelledby="headingInitial" data-bs-parent="#summaryAccordion">
+            <div id="collapseInitial" class="accordion-collapse collapse" aria-labelledby="headingInitial" data-bs-parent="#summaryAccordion">
               <div class="accordion-body">
                 <div class="mb-2"><strong>Hospital Name:</strong> <span id="modal_summary_hospital_name"></span></div>
                 <div class="mb-2"><strong>Category:</strong> <span id="modal_summary_category"></span></div>
@@ -100,9 +133,9 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer d-flex justify-content-between">
-        <button type="button" class="btn btn-outline-danger btn-lg w-50 me-2" id="declineApplicationBtn">Decline Application</button>
-        <button type="button" class="btn btn-success btn-lg w-50 ms-2" id="approveApplicationBtn">Approve Application</button>
+      <div class="d-flex justify-content-between" style="padding: 0 1.75rem 1rem 1.75rem;">
+        <button type="button" class="btn btn-outline-success btn-lg w-50 me-2" id="declineApplicationBtn" style="max-width:50%;">Decline Application</button>
+        <button type="button" class="btn btn-success btn-lg w-50 ms-2" id="approveApplicationBtn" style="max-width:50%;">Approve Application</button>
       </div>
     </div>
   </div>
