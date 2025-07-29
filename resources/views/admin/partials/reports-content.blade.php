@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <div class="dashboard-title" style="font-size:1.5rem;font-weight:700;color:#186737;">Reports</div>
-            <div style="font-size:1rem;color:#186737;"><i class="bi bi-bar-chart"></i> Dashboard <span style="color:#b0b0b0;">/ Reports</span></div>
+            <div style="font-size:1rem;color:#186737;"><i class="bi bi-grid"></i> Dashboard <span style="color:#b0b0b0;">/ Reports</span></div>
         </div>
         @include('admin.partials.navbar')
     </div>

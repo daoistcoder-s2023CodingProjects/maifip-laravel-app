@@ -252,25 +252,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar JS selection logic
-    const sidebarLinks = document.querySelectorAll('.sidebar-link');
-    const dashboardSection = document.getElementById('dashboard-section');
-    const applicationsSection = document.getElementById('applications-section');
-    sidebarLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            sidebarLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-            if (this.dataset.section === 'applications') {
-                dashboardSection.style.display = 'none';
-                applicationsSection.style.display = '';
-            } else {
-                dashboardSection.style.display = '';
-                applicationsSection.style.display = 'none';
-            }
-        });
-    });
-
     // Fetch and populate applicants table
     const tableBody = document.getElementById('applications-table-body');
 
@@ -803,6 +784,59 @@ document.addEventListener('DOMContentLoaded', function() {
             if (submitBtn) submitBtn.disabled = false;
         }
     }
+
+    // Section mapping
+    const sectionMap = {
+        '#': 'dashboard-section',
+        '#applications': 'applications-section',
+        '#reports': 'reports-section',
+        '#users': 'users-section'
+    };
+
+    // Helper to show only the selected section
+    function showSectionByHash(hash) {
+        // Default to dashboard if hash is not recognized
+        const sectionId = sectionMap[hash] || sectionMap['#'];
+        // Hide all sections
+        ['dashboard-section', 'applications-section', 'reports-section', 'users-section'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        // Show the selected section
+        const activeSection = document.getElementById(sectionId);
+        if (activeSection) activeSection.style.display = '';
+        // Update sidebar active state
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.classList.remove('active');
+            if (
+                (hash === '#' && link.dataset.section === 'dashboard') ||
+                (hash !== '#' && link.dataset.section === sectionId.replace('-section', ''))
+            ) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    // Initial section display based on hash
+    showSectionByHash(window.location.hash || '#');
+
+    // Listen for hash changes (browser navigation, manual change)
+    window.addEventListener('hashchange', function() {
+        showSectionByHash(window.location.hash || '#');
+    });
+
+    // Sidebar click: update hash and show section
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Map sidebar data-section to hash
+            let hash = '#';
+            if (this.dataset.section === 'applications') hash = '#applications';
+            else if (this.dataset.section === 'reports') hash = '#reports';
+            else if (this.dataset.section === 'users') hash = '#users';
+            window.location.hash = hash;
+        });
+    });
 });
 </script>
 <meta name="csrf-token" content="{{ csrf_token() }}">

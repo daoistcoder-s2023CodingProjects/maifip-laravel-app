@@ -112,7 +112,7 @@ class ApplicationController extends Controller
 
         // Medical services mapping for dashboard/service cards
         $medicalServices = [
-            'Medicine' => 'Medication',
+            'Medication' => 'Medication',
             'Laboratory' => 'Laboratory & Radiology',
             'Blood Screening' => 'Blood Screening',
             'High Risk Case' => 'Medical High Risk Treatment',
