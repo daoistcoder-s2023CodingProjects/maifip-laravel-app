@@ -193,8 +193,8 @@ document.addEventListener('DOMContentLoaded', function() {
           <select class="form-select" name="report_range" id="reportRangeSelect" required>
             <option value="" selected disabled>Select Range</option>
             <option value="day">Day</option>
-            <option value="month">Month</option>
-            <option value="year">Year</option>
+            <option value="month" disabled>Month</option>
+            <option value="year" disabled>Year</option>
           </select>
         </div>
         <div id="reportRangeFields"></div>
