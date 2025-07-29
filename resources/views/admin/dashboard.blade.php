@@ -498,71 +498,75 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 const tableBody = document.getElementById('applications-table-body');
                 tableBody.innerHTML = '';
-                data.data.forEach(applicant => {
-                    const row = document.createElement('tr');
-                    row.setAttribute('data-applicant-id', applicant.applicant_id);
-                    const appData = {
-                        applicant_id: applicant.applicant_id,
-                        hospital_name: applicant.hospital_name,
-                        category: applicant.category,
-                        interview_date: applicant.interview_date,
-                        interview_venue: applicant.interview_venue,
-                        interview_start_time: applicant.interview_start_time,
-                        interview_end_time: applicant.interview_end_time,
-                        informant_name: applicant.informant_name,
-                        relation_to_patient: applicant.relation_to_patient,
-                        informant_contact_number: applicant.informant_contact_number,
-                        informant_address: applicant.informant_address,
-                        patient_family_name: applicant.patient_family_name,
-                        patient_first_name: applicant.patient_first_name,
-                        patient_middle_name: applicant.patient_middle_name,
-                        patient_extension: applicant.patient_extension,
-                        patient_birthdate: applicant.patient_birthdate,
-                        patient_age: applicant.patient_age,
-                        patient_gender: applicant.patient_gender,
-                        patient_contact_number: applicant.patient_contact_number,
-                        place_of_birth: applicant.place_of_birth,
-                        nationality: applicant.nationality,
-                        religion: applicant.religion,
-                        permanent_address: applicant.permanent_address,
-                        temporary_address: applicant.temporary_address,
-                        civil_status: applicant.civil_status,
-                        living_status: applicant.living_status,
-                        highest_education: applicant.highest_education,
-                        occupation: applicant.occupation,
-                        monthly_income: applicant.monthly_income,
-                        philhealth_pin: applicant.philhealth_pin,
-                        philhealth_contributor_status: applicant.philhealth_contributor_status,
-                        mswd_main_classification: applicant.mswd_main_classification,
-                        mswd_sub_classification: applicant.mswd_sub_classification,
-                        mswd_marginalized_sector: applicant.mswd_marginalized_sector,
-                        mswd_mss_class: applicant.mswd_mss_class,
-                        monthly_expenses: applicant.monthly_expenses,
-                        admitting_diagnosis: applicant.admitting_diagnosis,
-                        final_diagnosis: applicant.final_diagnosis,
-                        duration_of_problems: applicant.duration_of_problems,
-                        previous_treatment: applicant.previous_treatment,
-                        present_treatment_plan: applicant.present_treatment_plan,
-                        health_accessibility_problem: applicant.health_accessibility_problem,
-                        assessment_findings: applicant.assessment_findings,
-                        recommended_interventions: applicant.recommended_interventions,
-                        family_composition: applicant.family_composition,
-                        total_amount: applicant.maifip_assistance_amount,
-                        application_status: applicant.application_status // <-- add status here
-                    };
-                    row.innerHTML = `
-                        <td>${applicant.application_reference_number}</td>
-                        <td>${applicant.patient_first_name} ${applicant.patient_family_name}</td>
-                        <td>${applicant.category || '(not set)'}</td>
-                        <td>${applicant.medical_service || '(not set)'}</td>
-                        <td>${applicant.total_amount || '(not set)'}</td>
-                        <td>${new Date(applicant.created_at).toLocaleDateString()}</td>
-                        <td>
-                            <button class='btn btn-sm btn-outline-secondary' data-bs-toggle="modal" data-bs-target="#applicationDetailsModal" data-app='${JSON.stringify(appData)}' onclick="showApplicationDetailsModal(this)">...</button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+                if (!data.data || data.data.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">No record found.</td></tr>`;
+                } else {
+                    data.data.forEach(applicant => {
+                        const row = document.createElement('tr');
+                        row.setAttribute('data-applicant-id', applicant.applicant_id);
+                        const appData = {
+                            applicant_id: applicant.applicant_id,
+                            hospital_name: applicant.hospital_name,
+                            category: applicant.category,
+                            interview_date: applicant.interview_date,
+                            interview_venue: applicant.interview_venue,
+                            interview_start_time: applicant.interview_start_time,
+                            interview_end_time: applicant.interview_end_time,
+                            informant_name: applicant.informant_name,
+                            relation_to_patient: applicant.relation_to_patient,
+                            informant_contact_number: applicant.informant_contact_number,
+                            informant_address: applicant.informant_address,
+                            patient_family_name: applicant.patient_family_name,
+                            patient_first_name: applicant.patient_first_name,
+                            patient_middle_name: applicant.patient_middle_name,
+                            patient_extension: applicant.patient_extension,
+                            patient_birthdate: applicant.patient_birthdate,
+                            patient_age: applicant.patient_age,
+                            patient_gender: applicant.patient_gender,
+                            patient_contact_number: applicant.patient_contact_number,
+                            place_of_birth: applicant.place_of_birth,
+                            nationality: applicant.nationality,
+                            religion: applicant.religion,
+                            permanent_address: applicant.permanent_address,
+                            temporary_address: applicant.temporary_address,
+                            civil_status: applicant.civil_status,
+                            living_status: applicant.living_status,
+                            highest_education: applicant.highest_education,
+                            occupation: applicant.occupation,
+                            monthly_income: applicant.monthly_income,
+                            philhealth_pin: applicant.philhealth_pin,
+                            philhealth_contributor_status: applicant.philhealth_contributor_status,
+                            mswd_main_classification: applicant.mswd_main_classification,
+                            mswd_sub_classification: applicant.mswd_sub_classification,
+                            mswd_marginalized_sector: applicant.mswd_marginalized_sector,
+                            mswd_mss_class: applicant.mswd_mss_class,
+                            monthly_expenses: applicant.monthly_expenses,
+                            admitting_diagnosis: applicant.admitting_diagnosis,
+                            final_diagnosis: applicant.final_diagnosis,
+                            duration_of_problems: applicant.duration_of_problems,
+                            previous_treatment: applicant.previous_treatment,
+                            present_treatment_plan: applicant.present_treatment_plan,
+                            health_accessibility_problem: applicant.health_accessibility_problem,
+                            assessment_findings: applicant.assessment_findings,
+                            recommended_interventions: applicant.recommended_interventions,
+                            family_composition: applicant.family_composition,
+                            total_amount: applicant.maifip_assistance_amount,
+                            application_status: applicant.application_status // <-- add status here
+                        };
+                        row.innerHTML = `
+                            <td>${applicant.application_reference_number}</td>
+                            <td>${applicant.patient_first_name} ${applicant.patient_family_name}</td>
+                            <td>${applicant.category || '(not set)'}</td>
+                            <td>${applicant.medical_service || '(not set)'}</td>
+                            <td>${applicant.maifip_assistance_amount || '(not set)'}</td>
+                            <td>${new Date(applicant.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button class='btn btn-sm btn-outline-secondary' data-bs-toggle="modal" data-bs-target="#applicationDetailsModal" data-app='${JSON.stringify(appData)}' onclick="showApplicationDetailsModal(this)">...</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
                 // Update table range info
                 const start = (data.current_page - 1) * data.per_page + 1;
                 const end = Math.min(data.current_page * data.per_page, data.total);
