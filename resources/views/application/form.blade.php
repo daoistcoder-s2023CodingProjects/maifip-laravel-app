@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Venue of Interview</label>
-                        <input type="text" class="form-control" name="interview_venue" placeholder="Add venue" required>
+                        <input type="text" class="form-control" name="interview_venue" placeholder="Add venue" value="Bantugan, Presentacion" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Start of Interview</label>
@@ -191,30 +191,27 @@
                             <label class="form-label">Civil Status</label>
                             <select class="form-select" name="civil_status" required>
                                 <option value="">Select</option>
-                                <option value="Single">Single</option>
-                                <option value="Married">Married</option>
-                                <option value="Widowed">Widowed</option>
-                                <option value="Separated">Separated</option>
+                                @foreach($maritalStatuses as $mStatus)
+                                    <option value="{{ $mStatus }}">{{ $mStatus }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Living Status</label>
                             <select class="form-select" name="living_status" required>
                                 <option value="">Select</option>
-                                <option value="With Family">With Family</option>
-                                <option value="Alone">Alone</option>
-                                <option value="With Relatives">With Relatives</option>
+                                @foreach($livingStatus as $lStatus)
+                                    <option value="{{ $lStatus }}">{{ $lStatus }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Highest Educational Attainment</label>
                             <select class="form-select" name="highest_education" required>
                                 <option value="">Select</option>
-                                <option value="None">None</option>
-                                <option value="Elementary">Elementary</option>
-                                <option value="High School">High School</option>
-                                <option value="College">College</option>
-                                <option value="Postgraduate">Postgraduate</option>
+                                @foreach($educations as $education)
+                                    <option value="{{ $education }}">{{ $education }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -300,39 +297,36 @@
                         <label class="form-label">Main Classification</label>
                         <select class="form-select" name="mswd_main_classification" required>
                             <option value="">Select</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
+                            @foreach($mswdMainClass as $mainClass)
+                                <option value="{{ $mainClass }}">{{ $mainClass }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Sub Classification for Non PhilHealth Coverage</label>
                         <select class="form-select" name="mswd_sub_classification" required>
                             <option value="">Select</option>
-                            <option value="PWD">PWD</option>
-                            <option value="Senior Citizen">Senior Citizen</option>
-                            <option value="Solo Parent">Solo Parent</option>
-                            <option value="Others">Others</option>
+                            @foreach($mswdSubClass as $subClass)
+                                <option value="{{ $subClass }}">{{ $subClass }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Membership to Marginalized Sector</label>
                         <select class="form-select" name="mswd_marginalized_sector" required>
                             <option value="">Select</option>
-                            <option value="4Ps">4Ps</option>
-                            <option value="IP">IP</option>
-                            <option value="Fisherfolk">Fisherfolk</option>
-                            <option value="Others">Others</option>
+                            @foreach($marginalizedSector as $sector)
+                                <option value="{{ $sector }}">{{ $sector }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">MSS Class</label>
                         <select class="form-select" name="mswd_mss_class" required>
                             <option value="">Select</option>
-                            <option value="Class 1">Class 1</option>
-                            <option value="Class 2">Class 2</option>
-                            <option value="Class 3">Class 3</option>
+                            @foreach($mssClass as $class)
+                                <option value="{{ $class }}">{{ $class }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -362,6 +356,8 @@
                         <div class="col-md-6" style="font-weight:500;">TOTAL AMOUNT</div>
                         <div class="col-md-6"><span id="monthly-expenses-total">0.00</span></div>
                     </div>
+                    <!-- Hidden input for total -->
+                    <input type="hidden" name="monthly_expenses_total" id="monthly_expenses_total" value="0.00">
                 </div>
             </div>
             <!-- Buttons outside the card -->
@@ -498,7 +494,7 @@
                 </div>
             </div>
             <div class="application-form-card mt-4">
-                <h5 class="mb-3" style="color:#186737;font-weight:500;">Data Privacy Consent & Certification</h5>
+                <h5 class="mb-3" id="data-privacy-title" style="color:#186737;font-weight:500;">Data Privacy Consent & Certification</h5>
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="checkbox" id="consent1">
                     <label class="form-check-label" for="consent1" style="font-size:0.75rem;">
@@ -596,6 +592,13 @@ body, .application-form {
 }
 .accordion-button {
     font-weight: 500 !important;
+}
+@media (max-width: 600px) {
+  .maifip-modal-title { font-size: 1.05rem; }
+  .step { font-size: 0.7rem; }
+  #data-privacy-title {
+    font-size: 1.05rem !important;
+  }
 }
 </style>
 <script>
@@ -790,6 +793,9 @@ function updateMonthlyExpensesTotal() {
         total += val;
     });
     document.getElementById('monthly-expenses-total').textContent = total.toFixed(2);
+    // Update hidden input
+    const hiddenInput = document.getElementById('monthly_expenses_total');
+    if (hiddenInput) hiddenInput.value = total.toFixed(2);
 }
 document.addEventListener('input', function(e) {
     if (e.target.classList.contains('monthly-expense-input')) {
