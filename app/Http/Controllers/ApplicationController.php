@@ -188,6 +188,8 @@ class ApplicationController extends Controller
                 'health_accessibility_problem' => 'nullable|string',
                 'assessment_findings' => 'nullable|string',
                 'recommended_interventions' => 'nullable|string',
+                // Add these for totals
+                'monthly_expenses_total' => 'nullable|numeric',
             ]);
 
             // Generate unique application reference number
@@ -212,6 +214,9 @@ class ApplicationController extends Controller
             foreach ($fields as $field) {
                 $applicant->$field = $request->input($field);
             }
+            // Set medical_service to recommended_interventions
+            $applicant->medical_service = $request->input('recommended_interventions');
+            $applicant->maifip_assistance_amount = $request->input('monthly_expenses_total', 0.00);
             // Save family composition as JSON
             $family = [];
             $names = $request->input('family_member_name', []);
@@ -254,12 +259,55 @@ class ApplicationController extends Controller
     public function getApplicants(Request $request)
     {
         // Default pagination size
-        $perPage = $request->input('per_page', 10); // Default to 10 items per page
+        $perPage = $request->input('per_page', 10);
 
-        // Fetch applicants with pagination
-        $applicants = Applicant::paginate($perPage);
+        $query = Applicant::query();
 
-        return response()->json($applicants);
+        // Filter by computed application_status in PHP after fetching
+        if (
+            $request->filled('application_status') ||
+            $request->filled('date_from') ||
+            $request->filled('date_to')
+        ) {
+            // Apply date filters in SQL for efficiency
+            if ($request->filled('date_from')) {
+                $query->whereDate('created_at', '>=', $request->input('date_from'));
+            }
+            if ($request->filled('date_to')) {
+                $query->whereDate('created_at', '<=', $request->input('date_to'));
+            }
+            // Fetch all matching date range, then filter by computed status in PHP
+            $applicants = $query->orderByDesc('created_at')->get();
+            if ($request->filled('application_status')) {
+                $status = $request->input('application_status');
+                $applicants = $applicants->filter(function ($item) use ($status) {
+                    return $item->application_status === $status;
+                })->values();
+            }
+            // Paginate manually
+            $page = $request->input('page', 1);
+            $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
+                $applicants->forPage($page, $perPage),
+                $applicants->count(),
+                $perPage,
+                $page,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+            // Add computed application_status to each item
+            $paginated->getCollection()->transform(function ($item) {
+                $item->application_status = $item->application_status;
+                return $item;
+            });
+            return response()->json($paginated);
+        } else {
+            // No filters, use normal pagination
+            $applicants = $query->orderByDesc('created_at')->paginate($perPage);
+            $applicants->getCollection()->transform(function ($item) {
+                $item->application_status = $item->application_status;
+                return $item;
+            });
+            return response()->json($applicants);
+        }
     }
 
     // Get applicant details by ID
@@ -281,6 +329,7 @@ class ApplicationController extends Controller
     // Set applicant status (approved/declined) using switch
     public function setApplicantStatus(Request $request, $id)
     {
+        \Log::debug('Setting applicant status', ['id' => $id, 'request' => $request->all()]);
         $applicant = Applicant::find($id);
         if (!$applicant) {
             return response()->json([
@@ -292,6 +341,13 @@ class ApplicationController extends Controller
         switch ($status) {
             case 'approved':
                 $applicant->is_approved = true;
+                // Update extra fields if provided
+                if ($request->has('amount')) {
+                    $applicant->maifip_assistance_amount = $request->input('amount');
+                }
+                if ($request->has('medical_service')) {
+                    $applicant->medical_service = $request->input('medical_service');
+                }
                 break;
             case 'declined':
                 $applicant->is_approved = false;

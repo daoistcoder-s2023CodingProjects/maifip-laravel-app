@@ -65,6 +65,9 @@ class Applicant extends Model
         // System fields
         'application_reference_number',
         'is_approved',
+        // Newly added fields
+        'medical_service',
+        'maifip_assistance_amount',
     ];
 
     // Computed field for application status

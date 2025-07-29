@@ -332,85 +332,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fetch and populate applicants table
     const tableBody = document.getElementById('applications-table-body');
 
-    fetch('/admin/applicants?page=1')
-        .then(response => response.json())
-        .then(data => {
-            tableBody.innerHTML = '';
-            data.data.forEach(applicant => {
-                const row = document.createElement('tr');
-                // Prepare data-app JSON for modal
-                const appData = {
-                    hospital_name: applicant.hospital_name,
-                    category: applicant.category,
-                    interview_date: applicant.interview_date,
-                    interview_venue: applicant.interview_venue,
-                    interview_start_time: applicant.interview_start_time,
-                    interview_end_time: applicant.interview_end_time,
-                    informant_name: applicant.informant_name,
-                    relation_to_patient: applicant.relation_to_patient,
-                    informant_contact_number: applicant.informant_contact_number,
-                    informant_address: applicant.informant_address,
-                    patient_family_name: applicant.patient_family_name,
-                    patient_first_name: applicant.patient_first_name,
-                    patient_middle_name: applicant.patient_middle_name,
-                    patient_extension: applicant.patient_extension,
-                    patient_birthdate: applicant.patient_birthdate,
-                    patient_age: applicant.patient_age,
-                    patient_gender: applicant.patient_gender,
-                    patient_contact_number: applicant.patient_contact_number,
-                    place_of_birth: applicant.place_of_birth,
-                    nationality: applicant.nationality,
-                    religion: applicant.religion,
-                    permanent_address: applicant.permanent_address,
-                    temporary_address: applicant.temporary_address,
-                    civil_status: applicant.civil_status,
-                    living_status: applicant.living_status,
-                    highest_education: applicant.highest_education,
-                    occupation: applicant.occupation,
-                    monthly_income: applicant.monthly_income,
-                    philhealth_pin: applicant.philhealth_pin,
-                    philhealth_contributor_status: applicant.philhealth_contributor_status,
-                    // MSWD Classification
-                    mswd_main_classification: applicant.mswd_main_classification,
-                    mswd_sub_classification: applicant.mswd_sub_classification,
-                    mswd_marginalized_sector: applicant.mswd_marginalized_sector,
-                    mswd_mss_class: applicant.mswd_mss_class,
-                    monthly_expenses: applicant.monthly_expenses,
-                    // Medical Data
-                    admitting_diagnosis: applicant.admitting_diagnosis,
-                    final_diagnosis: applicant.final_diagnosis,
-                    duration_of_problems: applicant.duration_of_problems,
-                    previous_treatment: applicant.previous_treatment,
-                    present_treatment_plan: applicant.present_treatment_plan,
-                    health_accessibility_problem: applicant.health_accessibility_problem,
-                    assessment_findings: applicant.assessment_findings,
-                    recommended_interventions: applicant.recommended_interventions,
-                    // Family Composition (if available)
-                    family_composition: applicant.family_composition
-                };
-                row.innerHTML = `
-                    <td>${applicant.application_reference_number}</td>
-                    <td>${applicant.patient_first_name} ${applicant.patient_family_name}</td>
-                    <td>${applicant.category || '(not set)'}</td>
-                    <td>${applicant.medical_service || '(not set)'}</td>
-                    <td>${applicant.total_amount || '(not set)'}</td>
-                    <td>${new Date(applicant.created_at).toLocaleDateString()}</td>
-                    <td>
-                        <button class='btn btn-sm btn-outline-secondary' data-bs-toggle="modal" data-bs-target="#applicationDetailsModal" data-app='${JSON.stringify(appData)}' onclick="showApplicationDetailsModal(this)">...</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        });
-});
-    // Example JS function to populate modal (replace with your AJAX/data logic)
+    // Store applicant id for modal actions
+    let currentApplicantId = null;
+    // Listen for modal show to set currentApplicantId
     window.showApplicationDetailsModal = function(btn) {
-        console.log('showApplicationDetailsModal triggered', btn);
-        // You would fetch the full application data here, for now use data-app attribute
         const app = btn.getAttribute('data-app');
         if (!app) return;
         let data;
         try { data = JSON.parse(app); } catch { return; }
+        // Set currentApplicantId from appData
+        currentApplicantId = data.applicant_id;
         // Populate all modal fields (match summary accordion)
         document.getElementById('modal_summary_hospital_name').textContent = data.hospital_name || '';
         document.getElementById('modal_summary_category').textContent = data.category || '';
@@ -509,4 +440,142 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.show();
         }
     }
+
+    // --- Approve/Decline logic using API ---
+    function updateApplicantStatus(applicantId, status, extra = {}) {
+        console.log(`Updating applicant ${applicantId} status to ${status}`, extra);
+        // Ensure CSRF token is present in the page <head>
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (!csrfToken) {
+            console.error('CSRF token not found. Make sure <meta name="csrf-token" content="{{ csrf_token() }}"> is in your <head>.');
+            return;
+        }
+        fetch(`/admin/applicant/${applicantId}/update-status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ application_status: status, ...extra })
+        })
+        .then(res => {
+            const contentType = res.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return res.json();
+            } else {
+                return res.text().then(text => {
+                    console.error('Non-JSON response:', text);
+                    return {};
+                });
+            }
+        })
+        .then(() => {
+            refreshApplicantsTable();
+        })
+        .catch(err => {
+            console.error('Error updating applicant status:', err);
+        });
+    }
+    window.updateApplicantStatus = updateApplicantStatus;
+
+    // Approve button handler
+    document.getElementById('approveApplicationBtn').onclick = function() {
+        console.log('Approve button clicked, currentApplicantId:', currentApplicantId);
+        if (!currentApplicantId) return;
+        window.updateApplicantStatus(currentApplicantId, 'approved');
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
+    };
+    // Decline button handler
+    document.getElementById('declineApplicationBtn').onclick = function() {
+        console.log('Decline button clicked, currentApplicantId:', currentApplicantId);
+        if (!currentApplicantId) return;
+        window.updateApplicantStatus(currentApplicantId, 'declined');
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
+    };
+
+    // Table refresh logic
+    function refreshApplicantsTable() {
+        fetch('/admin/applicants?page=1')
+            .then(response => response.json())
+            .then(data => {
+                tableBody.innerHTML = '';
+                data.data.forEach(applicant => {
+                    const row = document.createElement('tr');
+                    // Add data-applicant-id for modal actions
+                    row.setAttribute('data-applicant-id', applicant.applicant_id);
+                    // Prepare data-app JSON for modal
+                    const appData = {
+                        applicant_id: applicant.applicant_id,
+                        hospital_name: applicant.hospital_name,
+                        category: applicant.category,
+                        interview_date: applicant.interview_date,
+                        interview_venue: applicant.interview_venue,
+                        interview_start_time: applicant.interview_start_time,
+                        interview_end_time: applicant.interview_end_time,
+                        informant_name: applicant.informant_name,
+                        relation_to_patient: applicant.relation_to_patient,
+                        informant_contact_number: applicant.informant_contact_number,
+                        informant_address: applicant.informant_address,
+                        patient_family_name: applicant.patient_family_name,
+                        patient_first_name: applicant.patient_first_name,
+                        patient_middle_name: applicant.patient_middle_name,
+                        patient_extension: applicant.patient_extension,
+                        patient_birthdate: applicant.patient_birthdate,
+                        patient_age: applicant.patient_age,
+                        patient_gender: applicant.patient_gender,
+                        patient_contact_number: applicant.patient_contact_number,
+                        place_of_birth: applicant.place_of_birth,
+                        nationality: applicant.nationality,
+                        religion: applicant.religion,
+                        permanent_address: applicant.permanent_address,
+                        temporary_address: applicant.temporary_address,
+                        civil_status: applicant.civil_status,
+                        living_status: applicant.living_status,
+                        highest_education: applicant.highest_education,
+                        occupation: applicant.occupation,
+                        monthly_income: applicant.monthly_income,
+                        philhealth_pin: applicant.philhealth_pin,
+                        philhealth_contributor_status: applicant.philhealth_contributor_status,
+                        // MSWD Classification
+                        mswd_main_classification: applicant.mswd_main_classification,
+                        mswd_sub_classification: applicant.mswd_sub_classification,
+                        mswd_marginalized_sector: applicant.mswd_marginalized_sector,
+                        mswd_mss_class: applicant.mswd_mss_class,
+                        monthly_expenses: applicant.monthly_expenses,
+                        // Medical Data
+                        admitting_diagnosis: applicant.admitting_diagnosis,
+                        final_diagnosis: applicant.final_diagnosis,
+                        duration_of_problems: applicant.duration_of_problems,
+                        previous_treatment: applicant.previous_treatment,
+                        present_treatment_plan: applicant.present_treatment_plan,
+                        health_accessibility_problem: applicant.health_accessibility_problem,
+                        assessment_findings: applicant.assessment_findings,
+                        recommended_interventions: applicant.recommended_interventions,
+                        // Family Composition (if available)
+                        family_composition: applicant.family_composition,
+                        // Maif allocation amount
+                        total_amount: applicant.maifip_assistance_amount,
+                    };
+                    row.innerHTML = `
+                        <td>${applicant.application_reference_number}</td>
+                        <td>${applicant.patient_first_name} ${applicant.patient_family_name}</td>
+                        <td>${applicant.category || '(not set)'}</td>
+                        <td>${applicant.medical_service || '(not set)'}</td>
+                        <td>${applicant.total_amount || '(not set)'}</td>
+                        <td>${new Date(applicant.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class='btn btn-sm btn-outline-secondary' data-bs-toggle="modal" data-bs-target="#applicationDetailsModal" data-app='${JSON.stringify(appData)}' onclick="showApplicationDetailsModal(this)">...</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+    }
+
+    // Initial table load
+    refreshApplicantsTable();
+});
+    // Example JS function to populate modal (replace with your AJAX/data logic)
 </script>
+<meta name="csrf-token" content="{{ csrf_token() }}">

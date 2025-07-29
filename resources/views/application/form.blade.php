@@ -356,6 +356,8 @@
                         <div class="col-md-6" style="font-weight:500;">TOTAL AMOUNT</div>
                         <div class="col-md-6"><span id="monthly-expenses-total">0.00</span></div>
                     </div>
+                    <!-- Hidden input for total -->
+                    <input type="hidden" name="monthly_expenses_total" id="monthly_expenses_total" value="0.00">
                 </div>
             </div>
             <!-- Buttons outside the card -->
@@ -784,6 +786,9 @@ function updateMonthlyExpensesTotal() {
         total += val;
     });
     document.getElementById('monthly-expenses-total').textContent = total.toFixed(2);
+    // Update hidden input
+    const hiddenInput = document.getElementById('monthly_expenses_total');
+    if (hiddenInput) hiddenInput.value = total.toFixed(2);
 }
 document.addEventListener('input', function(e) {
     if (e.target.classList.contains('monthly-expense-input')) {
