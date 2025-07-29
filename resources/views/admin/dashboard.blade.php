@@ -494,17 +494,77 @@ document.addEventListener('DOMContentLoaded', function() {
         bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
     };
 
-    // Table refresh logic
+    // --- Application status filter logic ---
+    let currentStatus = 'pending'; // default
+    let currentPage = 1;
+    let perPage = 10;
+
+    function setActiveStatusButton(status) {
+        document.getElementById('pendingApplicationsBtn').classList.toggle('btn-success', status === 'pending');
+        document.getElementById('pendingApplicationsBtn').classList.toggle('btn-outline-success', status !== 'pending');
+        document.getElementById('approvedApplicationsBtn').classList.toggle('btn-success', status === 'approved');
+        document.getElementById('approvedApplicationsBtn').classList.toggle('btn-outline-success', status !== 'approved');
+        document.getElementById('declinedApplicationsBtn').classList.toggle('btn-success', status === 'declined');
+        document.getElementById('declinedApplicationsBtn').classList.toggle('btn-outline-success', status !== 'declined');
+    }
+
+    document.getElementById('pendingApplicationsBtn').onclick = function() {
+        currentStatus = 'pending';
+        currentPage = 1;
+        setActiveStatusButton(currentStatus);
+        refreshApplicantsTable();
+    };
+    document.getElementById('approvedApplicationsBtn').onclick = function() {
+        currentStatus = 'approved';
+        currentPage = 1;
+        setActiveStatusButton(currentStatus);
+        refreshApplicantsTable();
+    };
+    document.getElementById('declinedApplicationsBtn').onclick = function() {
+        currentStatus = 'declined';
+        currentPage = 1;
+        setActiveStatusButton(currentStatus);
+        refreshApplicantsTable();
+    };
+
+    document.getElementById('rowPerPageSelect').onchange = function() {
+        perPage = parseInt(this.value, 10);
+        currentPage = 1;
+        refreshApplicantsTable();
+    };
+
+    function renderPagination(pagination) {
+        const ul = document.getElementById('applications-pagination');
+        ul.innerHTML = '';
+        ul.innerHTML += `<li class="page-item${pagination.current_page === 1 ? ' disabled' : ''}">
+            <a class="page-link" href="#" data-page="${pagination.current_page - 1}">&lt;</a></li>`;
+        for (let i = 1; i <= pagination.last_page; i++) {
+            ul.innerHTML += `<li class="page-item${pagination.current_page === i ? ' active' : ''}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+        }
+        ul.innerHTML += `<li class="page-item${pagination.current_page === pagination.last_page ? ' disabled' : ''}">
+            <a class="page-link" href="#" data-page="${pagination.current_page + 1}">&gt;</a></li>`;
+        ul.querySelectorAll('a.page-link').forEach(link => {
+            link.onclick = function(e) {
+                e.preventDefault();
+                const page = parseInt(this.getAttribute('data-page'), 10);
+                if (!isNaN(page) && page >= 1 && page <= pagination.last_page && page !== pagination.current_page) {
+                    currentPage = page;
+                    refreshApplicantsTable();
+                }
+            };
+        });
+    }
+
     function refreshApplicantsTable() {
-        fetch('/admin/applicants?page=1')
+        fetch(`/admin/applicants?page=${currentPage}&per_page=${perPage}&application_status=${currentStatus}`)
             .then(response => response.json())
             .then(data => {
+                const tableBody = document.getElementById('applications-table-body');
                 tableBody.innerHTML = '';
                 data.data.forEach(applicant => {
                     const row = document.createElement('tr');
-                    // Add data-applicant-id for modal actions
                     row.setAttribute('data-applicant-id', applicant.applicant_id);
-                    // Prepare data-app JSON for modal
                     const appData = {
                         applicant_id: applicant.applicant_id,
                         hospital_name: applicant.hospital_name,
@@ -537,13 +597,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         monthly_income: applicant.monthly_income,
                         philhealth_pin: applicant.philhealth_pin,
                         philhealth_contributor_status: applicant.philhealth_contributor_status,
-                        // MSWD Classification
                         mswd_main_classification: applicant.mswd_main_classification,
                         mswd_sub_classification: applicant.mswd_sub_classification,
                         mswd_marginalized_sector: applicant.mswd_marginalized_sector,
                         mswd_mss_class: applicant.mswd_mss_class,
                         monthly_expenses: applicant.monthly_expenses,
-                        // Medical Data
                         admitting_diagnosis: applicant.admitting_diagnosis,
                         final_diagnosis: applicant.final_diagnosis,
                         duration_of_problems: applicant.duration_of_problems,
@@ -552,9 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         health_accessibility_problem: applicant.health_accessibility_problem,
                         assessment_findings: applicant.assessment_findings,
                         recommended_interventions: applicant.recommended_interventions,
-                        // Family Composition (if available)
                         family_composition: applicant.family_composition,
-                        // Maif allocation amount
                         total_amount: applicant.maifip_assistance_amount,
                     };
                     row.innerHTML = `
@@ -570,12 +626,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     tableBody.appendChild(row);
                 });
+                // Update table range info
+                const start = (data.current_page - 1) * data.per_page + 1;
+                const end = Math.min(data.current_page * data.per_page, data.total);
+                document.getElementById('table-range-info').textContent = `${start}-${end} of ${data.total}`;
+                // Render pagination
+                renderPagination(data);
             });
     }
 
-    // Initial table load
+    // Set default active status and load table
+    setActiveStatusButton(currentStatus);
     refreshApplicantsTable();
 });
-    // Example JS function to populate modal (replace with your AJAX/data logic)
 </script>
 <meta name="csrf-token" content="{{ csrf_token() }}">

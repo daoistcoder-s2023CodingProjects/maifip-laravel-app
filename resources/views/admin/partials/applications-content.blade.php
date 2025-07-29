@@ -9,9 +9,9 @@
     </div>
     <div class="card p-4 mb-4" style="border:1px solid #e0e0e0;background:#fff;">
         <div class="d-flex gap-3 mb-4">
-            <button class="btn btn-success px-4 py-2"><i class="bi bi-capsule"></i> Pending Applications</button>
-            <button class="btn btn-outline-success px-4 py-2"><i class="bi bi-shield-check"></i> Approved Applications</button>
-            <button class="btn btn-outline-success px-4 py-2"><i class="bi bi-shield-x"></i> Declined Applications</button>
+            <button class="btn btn-success px-4 py-2" id="pendingApplicationsBtn"><i class="bi bi-capsule"></i> Pending Applications</button>
+            <button class="btn btn-outline-success px-4 py-2" id="approvedApplicationsBtn"><i class="bi bi-shield-check"></i> Approved Applications</button>
+            <button class="btn btn-outline-success px-4 py-2" id="declinedApplicationsBtn"><i class="bi bi-shield-x"></i> Declined Applications</button>
         </div>
         <div class="row g-3 mb-3">
             <div class="col-md-2">
@@ -75,15 +75,18 @@
             </table>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="text-muted" style="font-size:0.95rem;">Row per page <select style="border:none;background:transparent;outline:none;"><option>25</option></select> 1-10 of 10</div>
+            <div class="text-muted" style="font-size:0.95rem;">
+                Row per page 
+                <select id="rowPerPageSelect" style="border:none;background:transparent;outline:none;">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                <span id="table-range-info"></span>
+            </div>
             <nav>
-                <ul class="pagination mb-0">
-                    <li class="page-item disabled"><a class="page-link" href="#">&lt;</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">&gt;</a></li>
+                <ul class="pagination mb-0" id="applications-pagination">
+                    <!-- Pagination will be rendered here -->
                 </ul>
             </nav>
         </div>
