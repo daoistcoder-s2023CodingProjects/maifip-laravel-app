@@ -15,6 +15,7 @@
     'mswdSubClass' => $mswdSubClass,
     'marginalizedSector' => $marginalizedSector,
     'mssClass' => $mssClass,
-    'timeSelections' => $timeSelections
+    'timeSelections' => $timeSelections,
+    'medicalServices' => $medicalServices
 ])
 @endsection

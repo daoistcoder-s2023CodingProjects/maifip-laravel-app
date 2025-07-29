@@ -34,4 +34,25 @@
     padding: 0;
     margin-top: 0;
 }
+
+/* Responsive MAIFIP navbar for mobile */
+@media (max-width: 600px) {
+    .maifip-navbar {
+        padding: 1rem 2rem 1rem 1rem !important;
+    }
+    .navbar-left {
+        margin: 0 !important;
+    }
+    .maifip-logo {
+        height: 38px !important;
+        width: 38px !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .maifip-title {
+        font-size: 1.05rem !important;
+    }
+    .maifip-desc {
+        font-size: 0.85rem !important;
+    }
+}
 </style>

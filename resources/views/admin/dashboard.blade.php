@@ -235,81 +235,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('applicationsChart');
-    if (!ctx) return;
-    const applicationsChart = new Chart(ctx.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [
-                {
-                    label: 'Current Week',
-                    data: [1200000, 3200000, 2800000, 4100000, 5256598, 9000000, 8500000],
-                    borderColor: '#186737',
-                    backgroundColor: 'rgba(24,103,55,0.08)',
-                    pointBackgroundColor: '#186737',
-                    pointBorderColor: '#fff',
-                    pointRadius: 5,
-                    fill: false,
-                    tension: 0.4,
-                },
-                {
-                    label: 'Previous Week',
-                    data: [900000, 1800000, 2100000, 3200000, 4800000, 8000000, 10000000],
-                    borderColor: '#888',
-                    backgroundColor: 'rgba(136,136,136,0.08)',
-                    pointBackgroundColor: '#888',
-                    pointBorderColor: '#fff',
-                    pointRadius: 5,
-                    fill: false,
-                    tension: 0.4,
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) label += ': ';
-                            if (context.parsed.y !== null) label += context.parsed.y.toLocaleString();
-                            return label;
-                        }
-                    },
-                    backgroundColor: '#222',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: '#186737',
-                    borderWidth: 1,
-                    padding: 10
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            if (value >= 1000000) return (value/1000000) + 'M';
-                            if (value >= 1000) return (value/1000) + 'K';
-                            return value;
-                        },
-                        color: '#bbb',
-                        font: { size: 13 }
-                    },
-                    grid: { color: '#f0f0f0' }
-                },
-                x: {
-                    ticks: { color: '#bbb', font: { size: 13 } },
-                    grid: { display: false }
-                }
-            }
-        }
-    });
-
     // Sidebar JS selection logic
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const dashboardSection = document.getElementById('dashboard-section');
@@ -646,6 +571,129 @@ document.addEventListener('DOMContentLoaded', function() {
                 renderPagination(data);
             });
     }
+
+    // --- Dashboard summary integration ---
+    function refreshDashboardSummary() {
+        fetch('/admin/dashboard/data')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) return;
+
+                // Update summary cards using IDs for easier targeting
+                document.getElementById('dashboard-total-applications').textContent = data.counts.total.toLocaleString();
+                document.getElementById('dashboard-total-applications-new').textContent = (data.new_today.pending + data.new_today.approved + data.new_today.declined).toLocaleString();
+
+                document.getElementById('dashboard-approved-applications').textContent = data.counts.approved.toLocaleString();
+                document.getElementById('dashboard-approved-applications-new').textContent = data.new_today.approved.toLocaleString();
+
+                document.getElementById('dashboard-pending-applications').textContent = data.counts.pending.toLocaleString();
+                document.getElementById('dashboard-pending-applications-new').textContent = data.new_today.pending.toLocaleString();
+
+                document.getElementById('dashboard-total-covered').textContent = '₱ ' + parseFloat(data.total_covered).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+                document.getElementById('dashboard-total-covered-new').textContent = parseFloat(data.newly_covered_amount).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+
+                // Update medical service cards
+                const serviceMap = {
+                    'medicine': 'dashboard-service-drugs',
+                    'laboratory': 'dashboard-service-laboratory',
+                    'blood screening': 'dashboard-service-blood',
+                    'high risk case': 'dashboard-service-medical',
+                    'post-hospitalization': 'dashboard-service-posthospital',
+                    'hospital bills': 'dashboard-service-hospitalbills'
+                };
+                Object.entries(serviceMap).forEach(([serviceKey, idPrefix]) => {
+                    const summary = data.medical_summary[serviceKey] || { applications: 0, amount: 0 };
+                    document.getElementById(idPrefix + '-applications').textContent = summary.applications.toLocaleString();
+                    document.getElementById(idPrefix + '-amount').textContent = '₱ ' + parseFloat(summary.amount).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+                });
+
+                // Update chart
+                const ctx = document.getElementById('applicationsChart');
+                if (ctx && data.chart) {
+                    const chartData = {
+                        labels: data.chart.labels,
+                        datasets: [
+                            {
+                                label: 'Current Week',
+                                data: data.chart.currentWeek,
+                                borderColor: '#186737',
+                                backgroundColor: 'rgba(24,103,55,0.08)',
+                                pointBackgroundColor: '#186737',
+                                pointBorderColor: '#fff',
+                                pointRadius: 5,
+                                fill: false,
+                                tension: 0.4,
+                            },
+                            {
+                                label: 'Previous Week',
+                                data: data.chart.previousWeek,
+                                borderColor: '#888',
+                                backgroundColor: 'rgba(136,136,136,0.08)',
+                                pointBackgroundColor: '#888',
+                                pointBorderColor: '#fff',
+                                pointRadius: 5,
+                                fill: false,
+                                tension: 0.4,
+                            }
+                        ]
+                    };
+                    if (window.applicationsChartInstance) {
+                        window.applicationsChartInstance.data = chartData;
+                        window.applicationsChartInstance.update();
+                    } else {
+                        window.applicationsChartInstance = new Chart(ctx.getContext('2d'), {
+                            type: 'line',
+                            data: chartData,
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                let label = context.dataset.label || '';
+                                                if (label) label += ': ';
+                                                if (context.parsed.y !== null) label += context.parsed.y.toLocaleString();
+                                                return label;
+                                            }
+                                        },
+                                        backgroundColor: '#222',
+                                        titleColor: '#fff',
+                                        bodyColor: '#fff',
+                                        borderColor: '#186737',
+                                        borderWidth: 1,
+                                        padding: 10
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            callback: function(value) {
+                                                if (value >= 1000000) return (value/1000000) + 'M';
+                                                if (value >= 1000) return (value/1000) + 'K';
+                                                return value;
+                                            },
+                                            color: '#bbb',
+                                            font: { size: 13 }
+                                        },
+                                        grid: { color: '#f0f0f0' }
+                                    },
+                                    x: {
+                                        ticks: { color: '#bbb', font: { size: 13 } },
+                                        grid: { display: false }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+    }
+
+    // Call on load
+    refreshDashboardSummary();
 
     // Set default active status and load table
     setActiveStatusButton(currentStatus);

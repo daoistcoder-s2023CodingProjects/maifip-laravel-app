@@ -401,7 +401,12 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Recommended Interventions</label>
-                        <input type="text" class="form-control" name="recommended_interventions" placeholder="Add details" required>
+                        <select class="form-select" name="recommended_interventions" required>
+                            <option value="">Select Medical Service</option>
+                            @foreach($medicalServices as $key => $label)
+                                <option value="{{ $key }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -592,6 +597,10 @@ body, .application-form {
 }
 .accordion-button {
     font-weight: 500 !important;
+}
+@media (max-width: 600px) {
+  .maifip-modal-title { font-size: 1.05rem; }
+  .step { font-size: 0.7rem; }
 }
 </style>
 <script>

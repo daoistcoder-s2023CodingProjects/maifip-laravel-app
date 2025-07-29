@@ -109,7 +109,20 @@ class ApplicationController extends Controller
                 'value' => $value
             ];
         }
-        return view('application', compact('hospitals', 'categories', 'relations', 'maritalStatuses', 'livingStatus', 'educations', 'mswdMainClass', 'mswdSubClass', 'marginalizedSector', 'mssClass', 'timeSelections'));
+
+        // Medical services mapping for dashboard/service cards
+        $medicalServices = [
+            'Medicine' => 'Medication',
+            'Laboratory' => 'Laboratory & Radiology',
+            'Blood Screening' => 'Blood Screening',
+            'High Risk Case' => 'Medical High Risk Treatment',
+            'Post-Hospitalization' => 'Hospitalization'
+        ];
+
+        return view('application', compact(
+            'hospitals', 'categories', 'relations', 'maritalStatuses', 'livingStatus', 'educations',
+            'mswdMainClass', 'mswdSubClass', 'marginalizedSector', 'mssClass', 'timeSelections', 'medicalServices'
+        ));
     }
 
     public function view($id)
@@ -408,4 +421,108 @@ class ApplicationController extends Controller
         ]);
     }
     
+    // Dashboard summary API
+    public function dashboardData(Request $request)
+    {
+        $query = Applicant::query();
+
+        // Optionally filter by date range
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->input('date_from'));
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->input('date_to'));
+        }
+
+        $applicants = $query->orderByDesc('created_at')->get();
+
+        $counts = [
+            'pending' => 0,
+            'approved' => 0,
+            'declined' => 0,
+            'total' => $applicants->count(),
+        ];
+        $totalCovered = 0;
+        $today = now()->format('Y-m-d');
+        $newToday = [
+            'pending' => 0,
+            'approved' => 0,
+            'declined' => 0,
+        ];
+        $newlyCoveredAmount = 0;
+
+        foreach ($applicants as $item) {
+            $status = $item->application_status;
+            if ($status === 'pending') $counts['pending']++;
+            elseif ($status === 'approved') {
+                $counts['approved']++;
+                $totalCovered += floatval($item->maifip_assistance_amount ?? 0);
+            }
+            elseif ($status === 'declined') $counts['declined']++;
+
+            // New pending today (created_at)
+            if ($status === 'pending' && \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') === $today) {
+                $newToday['pending']++;
+            }
+            // New approved today (updated_at)
+            if ($status === 'approved' && \Carbon\Carbon::parse($item->updated_at)->format('Y-m-d') === $today) {
+                $newToday['approved']++;
+                $newlyCoveredAmount += floatval($item->maifip_assistance_amount ?? 0);
+            }
+            // New declined today (updated_at)
+            if ($status === 'declined' && \Carbon\Carbon::parse($item->updated_at)->format('Y-m-d') === $today) {
+                $newToday['declined']++;
+            }
+        }
+
+        // Medical service summary for new approved today (by updated_at)
+        $medicalSummary = [];
+        foreach ($applicants as $item) {
+            if ($item->application_status === 'approved' && \Carbon\Carbon::parse($item->updated_at)->format('Y-m-d') === $today) {
+                $service = $item->medical_service ?: 'Others';
+                $serviceKey = strtolower(trim($service));
+                if (!isset($medicalSummary[$serviceKey])) {
+                    $medicalSummary[$serviceKey] = [
+                        'applications' => 0,
+                        'amount' => 0,
+                    ];
+                }
+                $medicalSummary[$serviceKey]['applications']++;
+                $medicalSummary[$serviceKey]['amount'] += floatval($item->maifip_assistance_amount ?? 0);
+            }
+        }
+
+        // Chart data: group by day for current and previous week
+        $chart = [
+            'labels' => [],
+            'currentWeek' => [],
+            'previousWeek' => [],
+        ];
+        $now = now();
+        $weekStart = $now->copy()->startOfWeek();
+        $prevWeekStart = $weekStart->copy()->subWeek();
+
+        for ($i = 0; $i < 7; $i++) {
+            $chart['labels'][] = $weekStart->copy()->addDays($i)->format('D');
+            $chart['currentWeek'][] = $applicants->whereBetween('created_at', [
+                $weekStart->copy()->addDays($i)->startOfDay(),
+                $weekStart->copy()->addDays($i)->endOfDay()
+            ])->count();
+            $chart['previousWeek'][] = $applicants->whereBetween('created_at', [
+                $prevWeekStart->copy()->addDays($i)->startOfDay(),
+                $prevWeekStart->copy()->addDays($i)->endOfDay()
+            ])->count();
+        }
+
+        return response()->json([
+            'success' => true,
+            'counts' => $counts,
+            'new_today' => $newToday,
+            'total_covered' => $totalCovered,
+            'newly_covered_amount' => $newlyCoveredAmount,
+            'medical_summary' => $medicalSummary,
+            'chart' => $chart,
+            'data' => $applicants,
+        ]);
+    }
 }
