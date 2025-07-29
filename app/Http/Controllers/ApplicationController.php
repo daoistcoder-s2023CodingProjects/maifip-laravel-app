@@ -227,8 +227,7 @@ class ApplicationController extends Controller
             foreach ($fields as $field) {
                 $applicant->$field = $request->input($field);
             }
-            // Set medical_service to recommended_interventions
-            $applicant->medical_service = $request->input('recommended_interventions');
+
             $applicant->maifip_assistance_amount = $request->input('monthly_expenses_total', 0.00);
             // Save family composition as JSON
             $family = [];
@@ -354,6 +353,7 @@ class ApplicationController extends Controller
         switch ($status) {
             case 'approved':
                 $applicant->is_approved = true;
+                $applicant->approval_date = now();
                 // Update extra fields if provided
                 if ($request->has('maifip_assistance_amount')) {
                     $applicant->maifip_assistance_amount = $request->input('maifip_assistance_amount');
@@ -364,6 +364,7 @@ class ApplicationController extends Controller
                 break;
             case 'declined':
                 $applicant->is_approved = false;
+                $applicant->approval_date = null;
                 break;
             default:
                 return response()->json([

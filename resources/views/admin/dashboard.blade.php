@@ -837,6 +837,9 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.hash = hash;
         });
     });
+
+    // Expose showStatusToast globally for other partials
+    window.showStatusToast = showStatusToast;
 });
 </script>
 <meta name="csrf-token" content="{{ csrf_token() }}">

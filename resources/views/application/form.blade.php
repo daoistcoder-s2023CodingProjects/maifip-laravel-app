@@ -401,12 +401,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Recommended Interventions</label>
-                        <select class="form-select" name="recommended_interventions" required>
-                            <option value="">Select Medical Service</option>
-                            @foreach($medicalServices as $key => $label)
-                                <option value="{{ $key }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" class="form-control" name="recommended_interventions" placeholder="Add details" required>
                     </div>
                 </div>
             </div>
@@ -499,7 +494,7 @@
                 </div>
             </div>
             <div class="application-form-card mt-4">
-                <h5 class="mb-3" style="color:#186737;font-weight:500;">Data Privacy Consent & Certification</h5>
+                <h5 class="mb-3" id="data-privacy-title" style="color:#186737;font-weight:500;">Data Privacy Consent & Certification</h5>
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="checkbox" id="consent1">
                     <label class="form-check-label" for="consent1" style="font-size:0.75rem;">
@@ -601,6 +596,9 @@ body, .application-form {
 @media (max-width: 600px) {
   .maifip-modal-title { font-size: 1.05rem; }
   .step { font-size: 0.7rem; }
+  #data-privacy-title {
+    font-size: 1.05rem !important;
+  }
 }
 </style>
 <script>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/apply', [LandingController::class, 'apply'])->name('application');
@@ -21,4 +22,6 @@ Route::middleware([])->group(function () {
     Route::get('/admin/applicant/{id}', [ApplicationController::class, 'getApplicant']);
     Route::post('/admin/applicant/{id}/update', [ApplicationController::class, 'updateApplicantDetails']);
     Route::post('/admin/applicant/{id}/update-status', [ApplicationController::class, 'setApplicantStatus']);
+    Route::post('/admin/dashboard/reports/generate', [ReportController::class, 'generateReportPdf']);
+    Route::get('/admin/dashboard/reports', [ReportController::class, 'getReports']);
 });
