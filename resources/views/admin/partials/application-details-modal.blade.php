@@ -133,7 +133,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-between" style="padding: 0 1.75rem 1rem 1.75rem;">
+      <div class="d-flex justify-content-between" id="modal_action_btns" style="padding: 0 1.75rem 1rem 1.75rem;">
         <button type="button" class="btn btn-outline-success btn-lg w-50 me-2" id="declineApplicationBtn" style="max-width:50%;">Decline Application</button>
         <button type="button" class="btn btn-success btn-lg w-50 ms-2" id="approveApplicationBtn" style="max-width:50%;">Approve Application</button>
       </div>

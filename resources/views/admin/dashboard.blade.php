@@ -340,8 +340,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!app) return;
         let data;
         try { data = JSON.parse(app); } catch { return; }
-        // Set currentApplicantId from appData
         currentApplicantId = data.applicant_id;
+
+        console.log('status:', data.application_status);
         // Populate all modal fields (match summary accordion)
         document.getElementById('modal_summary_hospital_name').textContent = data.hospital_name || '';
         document.getElementById('modal_summary_category').textContent = data.category || '';
@@ -432,6 +433,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modal_summary_health_accessibility_problem').textContent = data.health_accessibility_problem || '-';
         document.getElementById('modal_summary_assessment_findings').textContent = data.assessment_findings || '-';
         document.getElementById('modal_summary_recommended_interventions').textContent = data.recommended_interventions || '-';
+
+        // Show/hide approve/decline buttons based on application_status
+        const btnDiv = document.getElementById('modal_action_btns');
+        if (btnDiv) {
+            if (data.application_status == 'pending') {
+                btnDiv.style.setProperty('display', '', 'important');
+            } else {
+                btnDiv.style.setProperty('display', 'none', 'important');
+            }
+        }
 
         // Programmatically show the modal using Bootstrap 5 JS API
         var modalEl = document.getElementById('applicationDetailsModal');
@@ -612,6 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         recommended_interventions: applicant.recommended_interventions,
                         family_composition: applicant.family_composition,
                         total_amount: applicant.maifip_assistance_amount,
+                        application_status: applicant.application_status // <-- add status here
                     };
                     row.innerHTML = `
                         <td>${applicant.application_reference_number}</td>
