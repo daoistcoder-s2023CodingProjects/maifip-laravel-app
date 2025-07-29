@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="mb-3">
           <label class="form-label">Report Range</label>
           <select class="form-select" name="report_range" id="reportRangeSelect" required>
-            <option value="" selected>Select Range</option>
+            <option value="" selected disabled>Select Range</option>
             <option value="day">Day</option>
             <option value="month">Month</option>
             <option value="year">Year</option>
@@ -201,9 +201,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="mb-3">
           <label class="form-label">Facility</label>
           <select class="form-select" name="facility" required>
-            <option value="" selected>Select Facility</option>
+            <option value="" selected disabled>Select Facility</option>
             ${hospitals.map(h => `<option value="${h}">${h}</option>`).join('')}
           </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Venue</label>
+          <input type="text" class="form-control" name="venue" placeholder="Enter Venue" required>
         </div>
         `;
         reportFieldsContainer.innerHTML = html;

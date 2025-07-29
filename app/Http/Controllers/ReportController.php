@@ -39,7 +39,8 @@ class ReportController extends Controller
     public function generatePatientListSummaryPdf(Request $request)
     {
         $facility = $request->input('facility');
-        $date = $request->input('day'); // format: Y-m-d
+        $date = $request->input('day');
+        $venue = strtoupper($request->input('venue', '_________________'));
 
         // Query applicants using is_approved and approval_date, not application_status
         $applicants = Applicant::where('is_approved', true)
@@ -53,7 +54,7 @@ class ReportController extends Controller
         $data = [
             'bundle_no' => '', // You can set this if needed
             'facility' => $facility,
-            'venue' => 'BANTUGAN, PRESENTACION',
+            'venue' => $venue,
             'date' => $date,
             'total_patients' => $totalPatients,
             'total_amount' => number_format($totalAmount, 2),
@@ -76,7 +77,7 @@ class ReportController extends Controller
             // 'file_path' => $filePath, // Uncomment and set when file storage is ready
             'filters' => json_encode([
                 'facility' => $facility,
-                'date' => $date,
+                'date' => $date
             ]),
         ]);
 
