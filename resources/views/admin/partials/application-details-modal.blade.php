@@ -39,7 +39,8 @@
         .maifip-modal-title { font-size: 1.05rem; }
       }
       </style>
-      <div class="modal-body" style="background: #f8f9fa !important; padding: 2rem 2rem 1.5rem 2rem;">
+      <!-- Details Section (accordion) -->
+      <div id="modalDetailsSection" class="modal-body" style="background: #f8f9fa !important; padding: 2rem 2rem 1.5rem 2rem;">
         <div class="accordion" id="summaryAccordion">
           <div class="accordion-item mb-3">
             <h2 class="accordion-header" id="headingInitial">
@@ -133,9 +134,34 @@
           </div>
         </div>
       </div>
+      <!-- Approve Section (form fields) -->
+      <div id="modalApproveSection" class="modal-body" style="background: #f8f9fa !important; padding: 2rem 2rem 1.5rem 2rem; display:none;">
+        <div class="mb-3">
+          <label class="form-label">Medical Service</label>
+          <select class="form-select" id="approveMedicalService">
+            <option value="" selected disabled>Select Medical Service</option>
+            <option value="Medication">Drugs & Medicines</option>
+            <option value="Laboratory">Laboratory & Radiology</option>
+            <option value="Blood Screening">Blood Screening</option>
+            <option value="High Risk Case">Medical High Risk Cases</option>
+            <option value="Post-Hospitalization">Post-Hospitalization</option>
+            <option value="Hospital Bills">All Hospital Bills</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Medical Assistance Amount</label>
+          <input type="number" class="form-control" id="approveAssistanceAmount" name="maifip_assistance_amount" placeholder="Enter amount" min="0" step="0.01">
+        </div>
+      </div>
+      <!-- Action Buttons for Details -->
       <div class="d-flex justify-content-between" id="modal_action_btns" style="padding: 0 1.75rem 1rem 1.75rem;">
         <button type="button" class="btn btn-outline-success btn-lg w-50 me-2" id="declineApplicationBtn" style="max-width:50%;">Decline Application</button>
         <button type="button" class="btn btn-success btn-lg w-50 ms-2" id="approveApplicationBtn" style="max-width:50%;">Approve Application</button>
+      </div>
+      <!-- Action Buttons for Approve Form -->
+      <div class="d-flex justify-content-between" id="approveModalButtonDiv" style="padding: 0 1.75rem 1rem 1.75rem; display:none !important;">
+        <button type="button" class="btn btn-outline-success btn-lg w-50 me-2" id="approveModalCancel" style="max-width:50%;">Close</button>
+        <button type="button" class="btn btn-success btn-lg w-50 ms-2" id="approveModalSubmit" style="max-width:50%;">Submit</button>
       </div>
     </div>
   </div>

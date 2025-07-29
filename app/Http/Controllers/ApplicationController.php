@@ -355,8 +355,8 @@ class ApplicationController extends Controller
             case 'approved':
                 $applicant->is_approved = true;
                 // Update extra fields if provided
-                if ($request->has('amount')) {
-                    $applicant->maifip_assistance_amount = $request->input('amount');
+                if ($request->has('maifip_assistance_amount')) {
+                    $applicant->maifip_assistance_amount = $request->input('maifip_assistance_amount');
                 }
                 if ($request->has('medical_service')) {
                     $applicant->medical_service = $request->input('medical_service');

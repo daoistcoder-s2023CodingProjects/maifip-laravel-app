@@ -1,4 +1,21 @@
 @include('admin.partials.application-details-modal')
+<!-- Toast Notification -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+  <div id="statusToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="statusToastBody">
+        <!-- Message will be set by JS -->
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+<!-- Modal Loading Spinner Overlay -->
+<div id="modalLoadingSpinner" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:1055; background:rgba(255,255,255,0.6); align-items:center; justify-content:center;">
+  <div class="spinner-border text-success" style="width:3rem;height:3rem;" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
 <!-- JS for modal moved to bottom for better organization -->
 @extends('layouts.app')
 @section('content')
@@ -267,7 +284,11 @@ document.addEventListener('DOMContentLoaded', function() {
         try { data = JSON.parse(app); } catch { return; }
         currentApplicantId = data.applicant_id;
 
-        console.log('status:', data.application_status);
+        // Show details section, hide approve section and set buttons
+        document.getElementById('modalDetailsSection').style.display = '';
+        document.getElementById('modalApproveSection').style.display = 'none';
+        document.getElementById('modal_action_btns').style.display = '';
+
         // Populate all modal fields (match summary accordion)
         document.getElementById('modal_summary_hospital_name').textContent = data.hospital_name || '';
         document.getElementById('modal_summary_category').textContent = data.category || '';
@@ -374,16 +395,71 @@ document.addEventListener('DOMContentLoaded', function() {
         if (modalEl) {
             var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
             modal.show();
+
+            // Reset modal to details section when closed
+            modalEl.addEventListener('hidden.bs.modal', function handler() {
+                document.getElementById('modalDetailsSection').style.display = '';
+                document.getElementById('modalApproveSection').style.display = 'none';
+                document.getElementById('modal_action_btns').style.display = '';
+                document.getElementById('approveModalButtonDiv').style.setProperty('display', 'none', 'important');
+                modalEl.removeEventListener('hidden.bs.modal', handler);
+            });
         }
     }
 
     // --- Approve/Decline logic using API ---
     function updateApplicantStatus(applicantId, status, extra = {}) {
-        console.log(`Updating applicant ${applicantId} status to ${status}`, extra);
-        // Ensure CSRF token is present in the page <head>
+        // If status is 'approved', show approve section and capture input fields
+        if (status === 'approved') {
+            // Hide details, show approve form and buttons
+            document.getElementById('modalDetailsSection').style.display = 'none';
+            document.getElementById('modalApproveSection').style.display = '';
+            document.getElementById('modal_action_btns').style.setProperty('display', 'none', 'important');
+            document.getElementById('approveModalButtonDiv').style.display = '';
+
+            // Handle approve modal submit
+            document.getElementById('approveModalSubmit').onclick = function() {
+                const medicalServiceInput = document.getElementById('approveMedicalService');
+                const assistanceAmountInput = document.getElementById('approveAssistanceAmount');
+                const medicalService = medicalServiceInput.value;
+                const assistanceAmount = assistanceAmountInput.value;
+                // Validation
+                if (!medicalService || !assistanceAmount) {
+                    showStatusToast('Medical Service and Assistance Amount cannot be empty.', true);
+                    return;
+                }
+                setModalLoading(true);
+                // Call API with extra fields
+                sendStatusUpdate(applicantId, status, {
+                    medical_service: medicalService,
+                    maifip_assistance_amount: assistanceAmount
+                });
+                // Clear input fields
+                medicalServiceInput.selectedIndex = 0;
+                assistanceAmountInput.value = '';
+                // Modal will be hidden after request completes
+            };
+            // Handle approve modal cancel/close
+            document.getElementById('approveModalCancel').onclick = function() {
+                document.getElementById('approveMedicalService').selectedIndex = 0;
+                document.getElementById('approveAssistanceAmount').value = '';
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
+            };
+        } else {
+            // Decline: call API immediately
+            sendStatusUpdate(applicantId, status, extra);
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
+        }
+    }
+
+    // Helper to send status update API call
+    function sendStatusUpdate(applicantId, status, extra = {}) {
+        setModalLoading(true);
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
         if (!csrfToken) {
-            console.error('CSRF token not found. Make sure <meta name="csrf-token" content="{{ csrf_token() }}"> is in your <head>.');
+            setModalLoading(false);
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
+            showStatusToast('CSRF token not found. Make sure <meta name="csrf-token" content="{{ csrf_token() }}"> is in your <head>.', true);
             return;
         }
         fetch(`/admin/applicant/${applicantId}/update-status`, {
@@ -400,34 +476,46 @@ document.addEventListener('DOMContentLoaded', function() {
             if (contentType && contentType.includes('application/json')) {
                 return res.json();
             } else {
+                setModalLoading(false);
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
                 return res.text().then(text => {
-                    console.error('Non-JSON response:', text);
+                    showStatusToast('Non-JSON response: ' + text, true);
                     return {};
                 });
             }
         })
-        .then(() => {
+        .then((data) => {
+            setModalLoading(false);
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
             refreshApplicantsTable();
+            showStatusToast('Applicant status updated successfully.', false);
         })
         .catch(err => {
-            console.error('Error updating applicant status:', err);
+            setModalLoading(false);
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
+            showStatusToast('Error updating applicant status: ' + err, true);
         });
     }
-    window.updateApplicantStatus = updateApplicantStatus;
+
+    // Toast notification function
+    function showStatusToast(message, isError) {
+        const toastEl = document.getElementById('statusToast');
+        const toastBody = document.getElementById('statusToastBody');
+        toastBody.textContent = message;
+        toastEl.classList.remove('text-bg-success', 'text-bg-danger');
+        toastEl.classList.add(isError ? 'text-bg-danger' : 'text-bg-success');
+        const toast = bootstrap.Toast.getOrCreateInstance(toastEl);
+        toast.show();
+    }
 
     // Approve button handler
     document.getElementById('approveApplicationBtn').onclick = function() {
-        console.log('Approve button clicked, currentApplicantId:', currentApplicantId);
-        if (!currentApplicantId) return;
-        window.updateApplicantStatus(currentApplicantId, 'approved');
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
+        // Show approve form section
+        updateApplicantStatus(currentApplicantId, 'approved');
     };
     // Decline button handler
     document.getElementById('declineApplicationBtn').onclick = function() {
-        console.log('Decline button clicked, currentApplicantId:', currentApplicantId);
-        if (!currentApplicantId) return;
-        window.updateApplicantStatus(currentApplicantId, 'declined');
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('applicationDetailsModal')).hide();
+        updateApplicantStatus(currentApplicantId, 'declined');
     };
 
     // --- Application status filter logic ---
@@ -598,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Update medical service cards
                 const serviceMap = {
-                    'medicine': 'dashboard-service-drugs',
+                    'medication': 'dashboard-service-drugs',
                     'laboratory': 'dashboard-service-laboratory',
                     'blood screening': 'dashboard-service-blood',
                     'high risk case': 'dashboard-service-medical',
@@ -702,6 +790,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set default active status and load table
     setActiveStatusButton(currentStatus);
     refreshApplicantsTable();
+
+    // Add this function near the top of your script
+    function setModalLoading(isLoading) {
+        const spinner = document.getElementById('modalLoadingSpinner');
+        const submitBtn = document.getElementById('approveModalSubmit');
+        if (isLoading) {
+            spinner.style.display = 'flex';
+            if (submitBtn) submitBtn.disabled = true;
+        } else {
+            spinner.style.display = 'none';
+            if (submitBtn) submitBtn.disabled = false;
+        }
+    }
 });
 </script>
 <meta name="csrf-token" content="{{ csrf_token() }}">
