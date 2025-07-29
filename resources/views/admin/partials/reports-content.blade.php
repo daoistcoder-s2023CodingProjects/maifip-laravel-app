@@ -277,6 +277,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const currentYear = new Date().getFullYear();
                 html += `
                 <div class="mb-3">
+                  <label class="form-label">Facility</label>
+                  <select class="form-select" name="facility" required>
+                    <option value="" selected disabled>Select Facility</option>
+                    ${hospitals.map(h => `<option value="${h}">${h}</option>`).join('')}
+                  </select>
+                </div>
+                <div class="mb-3">
                   <label class="form-label">Year</label>
                   <select class="form-select" name="year" required>
                     ${[...Array(6)].map((_, i) => {
