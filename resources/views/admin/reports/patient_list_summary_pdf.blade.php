@@ -82,7 +82,7 @@
         </tr>
         <tr>
             <td class="bold nowrap">TOTAL AMOUNT:</td>
-            <td>{{ number_format((float) $total_amount, 2) }}</td>
+            <td>{{ $total_amount }}</td>
         </tr>
         <tr>
             <td class="bold nowrap">FACILITY:</td>
@@ -113,7 +113,7 @@
                     <tr class="table-total">
                         <td style="border:1px solid #222;"></td>
                         <td style="text-align:left; border:1px solid #222;">TOTAL</td>
-                        <td style="text-align:right; border:1px solid #222;">{{ number_format((float) $total_amount, 2) }}</td>
+                        <td style="text-align:right; border:1px solid #222;">{{ $total_amount }}</td>
                     </tr>
                 </table>
             </td>
