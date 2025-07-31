@@ -38,6 +38,9 @@
         .maifip-modal-header img { height: 38px !important; width: 38px !important; }
         .maifip-modal-title { font-size: 1.05rem; }
       }
+      #applicationDetailsModal:not(.show) {
+        display: none !important;
+      }
       </style>
       <!-- Details Section (accordion) -->
       <div id="modalDetailsSection" class="modal-body" style="background: #f8f9fa !important; padding: 2rem 2rem 1.5rem 2rem;">

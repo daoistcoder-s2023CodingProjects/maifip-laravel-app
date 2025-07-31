@@ -465,8 +465,8 @@ class ApplicationController extends Controller
             if ($status === 'pending' && \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') === $today) {
                 $newToday['pending']++;
             }
-            // New approved today (updated_at)
-            if ($status === 'approved' && \Carbon\Carbon::parse($item->updated_at)->format('Y-m-d') === $today) {
+            // New approved today (approval_date)
+            if ($status === 'approved' && $item->approval_date && \Carbon\Carbon::parse($item->approval_date)->format('Y-m-d') === $today) {
                 $newToday['approved']++;
                 $newlyCoveredAmount += floatval($item->maifip_assistance_amount ?? 0);
             }
@@ -476,10 +476,10 @@ class ApplicationController extends Controller
             }
         }
 
-        // Medical service summary for new approved today (by updated_at)
+        // Medical service summary for all approved (grouped by medical_service)
         $medicalSummary = [];
         foreach ($applicants as $item) {
-            if ($item->application_status === 'approved' && \Carbon\Carbon::parse($item->updated_at)->format('Y-m-d') === $today) {
+            if ($item->application_status === 'approved') {
                 $service = $item->medical_service ?: 'Others';
                 $serviceKey = strtolower(trim($service));
                 if (!isset($medicalSummary[$serviceKey])) {
