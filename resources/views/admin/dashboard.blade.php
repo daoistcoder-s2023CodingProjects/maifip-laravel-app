@@ -383,6 +383,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('modalApproveSection').style.display = 'none';
                 document.getElementById('modal_action_btns').style.display = '';
                 document.getElementById('approveModalButtonDiv').style.setProperty('display', 'none', 'important');
+                // Collapse all accordion sections when modal is closed
+                var accordions = modalEl.querySelectorAll('.accordion-collapse');
+                accordions.forEach(function(acc) {
+                    acc.classList.remove('show');
+                });
+                // Remove highlight from all accordion headers
+                var accordionBtns = modalEl.querySelectorAll('.accordion-button');
+                accordionBtns.forEach(function(btn) {
+                    btn.classList.add('collapsed');
+                    btn.setAttribute('aria-expanded', 'false');
+                });
                 modalEl.removeEventListener('hidden.bs.modal', handler);
             });
         }
