@@ -5,7 +5,7 @@ namespace App\Helpers;
 class SmsHelper
 {
     // Set your Semaphore API key and sender name here
-    protected static $apiKey = 'YOUR_API_KEY_HERE';
+    protected static $apiKey = 'e2e320c4abd1a6f1455742b840765b09';
     protected static $senderName = 'MAIFIP';
 
     /**
