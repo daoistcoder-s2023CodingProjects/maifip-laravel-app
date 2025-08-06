@@ -311,8 +311,14 @@ class ApplicationController extends Controller
             if ($request->filled('date_to')) {
                 $query->whereDate('created_at', '<=', $request->input('date_to'));
             }
+            // Order by approval_date desc if filtering for approved, else by created_at desc
+            if ($request->filled('application_status') && $request->input('application_status') === 'approved') {
+                $query->orderByDesc('approval_date');
+            } else {
+                $query->orderByDesc('created_at');
+            }
             // Fetch all matching date range, then filter by computed status in PHP
-            $applicants = $query->orderByDesc('created_at')->get();
+            $applicants = $query->get();
             if ($request->filled('application_status')) {
                 $status = $request->input('application_status');
                 $applicants = $applicants->filter(function ($item) use ($status) {
@@ -328,7 +334,6 @@ class ApplicationController extends Controller
                 $page,
                 ['path' => $request->url(), 'query' => $request->query()]
             );
-            // Add computed application_status to each item
             $paginated->getCollection()->transform(function ($item) {
                 $item->application_status = $item->application_status;
                 return $item;
