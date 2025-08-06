@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Applicant;
+use App\Helpers\SmsHelper;
 
 class ApplicationController extends Controller
 {
@@ -251,6 +252,28 @@ class ApplicationController extends Controller
             $applicant->monthly_expenses = json_encode($request->input('monthly_expenses', []));
             $applicant->save();
 
+            // Send SMS notification if required fields are present
+            if ($applicant->patient_first_name && $applicant->application_reference_number) {
+                $contact_number = $applicant->patient_contact_number;
+                $message = "Hi {$applicant->patient_first_name}, your medical assistance application has been submitted successfully. Your application reference number is {$applicant->application_reference_number}. You’ll get application status updates via SMS. Thank you!";
+                if ($contact_number) {
+                    $smsResult = SmsHelper::send($contact_number, $message);
+                    if (!$smsResult['success']) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Failed to send SMS: ' . ($smsResult['error'] ?? 'Unknown error'),
+                            'sms_status' => $smsResult['status'],
+                            'sms_response' => $smsResult['response'],
+                        ], 500);
+                    }
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Missing patient_first_name or application_reference_number for SMS notification.'
+                ], 400);
+            }
+
             return response()->json([
                 'success' => true,
                 'application_reference_number' => $reference
@@ -360,6 +383,27 @@ class ApplicationController extends Controller
                 }
                 if ($request->has('medical_service')) {
                     $applicant->medical_service = $request->input('medical_service');
+                }
+                // Send SMS notification if required fields are present
+                if ($applicant->patient_first_name && $applicant->application_reference_number) {
+                    $contact_number = $applicant->patient_contact_number;
+                    $message = "Hi {$applicant->patient_first_name}, your medical assistance application with application reference number {$applicant->application_reference_number} has been APPROVED. For further details and instructions please contact our help desk. Thank you!";
+                    if ($contact_number) {
+                        $smsResult = SmsHelper::send($contact_number, $message);
+                        if (!$smsResult['success']) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Failed to send SMS: ' . ($smsResult['error'] ?? 'Unknown error'),
+                                'sms_status' => $smsResult['status'],
+                                'sms_response' => $smsResult['response'],
+                            ], 500);
+                        }
+                    }
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Missing patient_first_name or application_reference_number for SMS notification.'
+                    ], 400);
                 }
                 break;
             case 'declined':
