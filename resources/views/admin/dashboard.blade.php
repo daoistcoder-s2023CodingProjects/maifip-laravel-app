@@ -578,10 +578,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 const tableBody = document.getElementById('applications-table-body');
                 tableBody.innerHTML = '';
-                if (!data.data || data.data.length === 0) {
+                // Always use data.data as array, and use pagination info from data
+                let applicantsArray = Array.isArray(data.data) ? data.data : Object.values(data.data);
+                if (applicantsArray.length === 0) {
                     tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4">No record found.</td></tr>`;
                 } else {
-                    data.data.forEach(applicant => {
+                    applicantsArray.forEach(applicant => {
                         const row = document.createElement('tr');
                         row.setAttribute('data-applicant-id', applicant.applicant_id);
                         const appData = {
@@ -647,12 +649,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         tableBody.appendChild(row);
                     });
                 }
-                // Update table range info
-                const start = (data.current_page - 1) * data.per_page + 1;
-                const end = Math.min(data.current_page * data.per_page, data.total);
-                document.getElementById('table-range-info').textContent = `${start}-${end} of ${data.total}`;
-                // Render pagination
-                renderPagination(data);
+                // Update table range info and render pagination only if pagination info exists
+                if (typeof data.current_page !== 'undefined' && typeof data.last_page !== 'undefined') {
+                    const start = (data.current_page - 1) * data.per_page + 1;
+                    const end = Math.min(data.current_page * data.per_page, data.total);
+                    document.getElementById('table-range-info').textContent = `${start}-${end} of ${data.total}`;
+                    renderPagination(data);
+                } else {
+                    document.getElementById('table-range-info').textContent = '';
+                }
             });
     }
 
