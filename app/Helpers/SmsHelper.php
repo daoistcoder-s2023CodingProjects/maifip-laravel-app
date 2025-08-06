@@ -6,7 +6,8 @@ class SmsHelper
 {
     // Set your Semaphore API key and sender name here
     protected static $apiKey = 'e2e320c4abd1a6f1455742b840765b09';
-    protected static $senderName = '';
+    protected static $senderName = 'MAVENHIVE';
+    protected static $enableSms = false; // Set to true to enable actual sending
 
     /**
      * Send SMS using Semaphore API.
@@ -16,6 +17,24 @@ class SmsHelper
      */
     public static function send($contact_number, $message)
     {
+        if (!self::$enableSms) {
+            // Maintenance mode: do not send, just return success
+            \Log::info('SMS sending skipped (maintenance mode)', [
+                'contact_number' => $contact_number,
+                'message' => $message,
+            ]);
+            return [
+                'success' => true,
+                'status' => 'skipped',
+                'response' => [
+                    'contact_number' => $contact_number,
+                    'message' => $message,
+                    'note' => 'SMS sending skipped (maintenance mode)',
+                ],
+                'error' => null,
+            ];
+        }
+
         $parameters = [
             'apikey' => self::$apiKey,
             'number' => $contact_number,
