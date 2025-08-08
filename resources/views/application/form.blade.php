@@ -932,9 +932,10 @@ modalStyle.innerHTML = `
 .maifip-modal-desc { color: #222; font-size: 1.15rem; text-align: left !important; margin-bottom: 0.7rem;  margin-left: 0.5rem; }
 .maifip-modal-ref { color: #186737; font-weight: 600; letter-spacing: 0.04em; }
 @media (max-width: 600px) {
-  .maifip-modal-card { padding: 1.2rem 0.5rem; min-width: 0; }
+  .maifip-modal-card { padding: .25rem 0.5rem; min-width: 0; width: 95vw; position: fixed; left: 50%; top: 40%; transform: translate(-50%,-50%);}
   .maifip-modal-header img { height: 38px !important; width: 38px !important; }
-  .maifip-modal-title { font-size: 1.05rem; }
+  .maifip-modal-title { font-size: 1rem; letter-spacing: 0.8em; }
+  .maifip-modal-desc { color: #222; font-size: 0.85rem; text-align: left !important; margin-bottom: 0.7rem;  margin-left: 0.5rem; }
 }
 `;
 document.head.appendChild(modalStyle);

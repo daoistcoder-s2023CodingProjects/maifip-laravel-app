@@ -27,8 +27,8 @@
             <h1 class="hero-title">Medical Assistance to Indigent and Financially Incapacitated Patients</h1>
             <p class="hero-description">The Department of Health offers the Medical Assistance to Indigent and Financially Incapacitated Patients (MAIFIP) Program to ensure continuous access to essential healthcare services for those in need.</p>
             <div class="hero-buttons">
-                <a href="#" class="btn btn-success">Get Medical Assistance</a>
-                <a href="#" class="btn btn-outline-success">Learn More</a>
+                <a href="{{ route('application') }}" class="btn btn-success">Get Medical Assistance</a>
+                <a href="#" class="btn btn-outline-success" style="display:none;">Learn More</a>
             </div>
         </div>
         <div class="hero-img">
