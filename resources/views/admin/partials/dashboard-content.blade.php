@@ -62,8 +62,8 @@
     <div class="card p-4" style="border:1px solid #e0e0e0;">
         <div class="d-flex mb-4 gap-3">
             <button class="btn btn-success px-4 py-2" style="font-weight:600;font-size:1.1rem;"><i class="bi bi-capsule"></i> Medical Services</button>
-            <button class="btn btn-outline-success px-4 py-2" style="font-weight:600;font-size:1.1rem;"><i class="bi bi-file-earmark-text"></i> Applications</button>
-            <button class="btn btn-outline-success px-4 py-2" style="font-weight:600;font-size:1.1rem;"><i class="bi bi-hospital"></i> Hospitals</button>
+            {{-- <button class="btn btn-outline-success px-4 py-2" style="font-weight:600;font-size:1.1rem;"><i class="bi bi-file-earmark-text"></i> Applications</button>
+            <button class="btn btn-outline-success px-4 py-2" style="font-weight:600;font-size:1.1rem;"><i class="bi bi-hospital"></i> Hospitals</button> --}}
         </div>
         <div class="services-cards d-grid gap-4" style="grid-template-columns: repeat(3, 1fr);">
             <div class="service-card h-100 p-4">

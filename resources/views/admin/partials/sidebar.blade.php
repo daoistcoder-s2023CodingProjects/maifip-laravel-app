@@ -15,11 +15,11 @@
                 <i class="bi bi-file-earmark-text"></i> <span class="sidebar-label">Applications</span>
             </a>
         </li>
-        <li class="nav-item mb-3">
+        {{-- <li class="nav-item mb-3">
             <a href="#" class="nav-link sidebar-link" data-section="users">
                 <i class="bi bi-people"></i> <span class="sidebar-label">User Management</span>
             </a>
-        </li>
+        </li> --}}
         <li class="nav-item mb-3">
             <a href="#" class="nav-link sidebar-link" data-section="reports">
                 <i class="bi bi-bar-chart"></i> <span class="sidebar-label">Reports</span>
