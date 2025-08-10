@@ -483,6 +483,10 @@ class ApplicationController extends Controller
         if ($request->filled('date_to')) {
             $query->whereDate('created_at', '<=', $request->input('date_to'));
         }
+        // Optionally filter by exact date if 'date' is provided
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->input('date'));
+        }
 
         $applicants = $query->orderByDesc('created_at')->get();
 
