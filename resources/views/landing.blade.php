@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="navbar-right">
-        <a href="#" class="nav-link">Check Application</a>
+        {{-- <a href="#" class="nav-link">Check Application</a> --}}
         <a href="{{ route('application') }}" class="btn btn-success nav-apply-btn">Apply Now</a>
     </div>
 </nav>
