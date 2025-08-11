@@ -146,7 +146,13 @@ function fetchReportsAndUpdateTable(page = 1, perPage = 10) {
                                 <td>${report.report_type_label ?? report.report_type}</td>
                                 <td>${report.created_by}</td>
                                 <td>${new Date(report.date_generated).toLocaleDateString()}</td>
-                                <td><button class='btn btn-sm btn-outline-secondary'>View</button></td>
+                                <td>
+                                    <form action="/admin/dashboard/reports/generate" method="POST" target="_blank" style="display:inline;">
+                                        <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
+                                        <input type="hidden" name="report_id" value="${report.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">View</button>
+                                    </form>
+                                </td>
                             </tr>
                         `;
                     });
